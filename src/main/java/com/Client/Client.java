@@ -17,7 +17,7 @@ public class Client {
          String echo;
          
          while (sessionStarted) {
-            System.out.println("Enter a line to receive an echo " + "from the server, or a single period to quit.");
+            System.out.println("Enter a line to receive an echo " + "from the server, or type exit to quit.");
 
             message = br.readLine( );
             
@@ -38,7 +38,7 @@ public class Client {
      }
       
       
-      public String getHostName() {
+      private String getHostName() {
     	  System.out.println("Welcome to the Echo client.\n" +
     	            "What is the name of the server host?");
     	  String hostName = "";
@@ -53,7 +53,7 @@ public class Client {
     	  return hostName;
       }
       
-      public String getPortNumber() {
+      private String getPortNumber() {
 
     	  System.out.println("What is the port number of the server host?");
           String portNumber = "";
