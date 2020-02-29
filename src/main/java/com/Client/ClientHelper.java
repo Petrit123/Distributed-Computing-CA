@@ -4,14 +4,14 @@ import java.net.*;
 import java.io.*;
 import com.Server.ClientSocket;;
 
-public class EchoClientHelper2 {
+public class ClientHelper {
 
 	   private static final String MESSAGE_TO_END_CONNECTION = "Exit";
        public ClientSocket mySocket;
 	   public InetAddress serverHost;
 	   public int serverPort;
 
-	   EchoClientHelper2(String hostName, String portNum) throws SocketException, UnknownHostException, IOException {
+	   ClientHelper(String hostName, String portNum) throws SocketException, UnknownHostException, IOException {
 	  	   this.serverHost = InetAddress.getByName(hostName);
 	  	   this.serverPort = Integer.parseInt(portNum);
 	       //Instantiates a stream-mode socket and wait for a connection.

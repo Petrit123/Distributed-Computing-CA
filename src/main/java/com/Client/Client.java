@@ -3,14 +3,14 @@ package com.Client;
 import java.io.*;
 
 
-public class EchoClient2 {
+public class Client {
       private static final String MESSAGE_TO_END_CONNECTION = "Exit";
       public InputStreamReader is = new InputStreamReader(System.in);
       public BufferedReader br = new BufferedReader(is);
       
       public void startClient() {
     	 try {
-         EchoClientHelper2 helper = new EchoClientHelper2(getHostName(), getPortNumber());
+         ClientHelper helper = new ClientHelper(getHostName(), getPortNumber());
          boolean sessionStarted = true;
          
          String message; 

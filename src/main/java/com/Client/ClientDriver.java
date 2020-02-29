@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 public class ClientDriver {
    public static void main(String[] args) throws SocketException, UnknownHostException, IOException {
 	   
-	   EchoClient2 client = new EchoClient2();
+	   Client client = new Client();
 	   
 	   client.startClient();
 	   
