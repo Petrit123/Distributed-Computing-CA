@@ -6,7 +6,7 @@ import com.Server.StreamSocket;;
 
 public class EchoClientHelper2 {
 
-	   static final String endMessage = "Exit";
+	   private static final String MESSAGE_TO_END_CONNECTION = "Exit";
        public StreamSocket mySocket;
 	   public InetAddress serverHost;
 	   public int serverPort;
@@ -28,7 +28,7 @@ public class EchoClientHelper2 {
 	   } // end getEcho
 
 	   public void done( ) throws SocketException, IOException {
-	      mySocket.sendMessage(endMessage);
+	      mySocket.sendMessage(MESSAGE_TO_END_CONNECTION);
 	      mySocket.close( );
 	   } // end done 
 	} //end class

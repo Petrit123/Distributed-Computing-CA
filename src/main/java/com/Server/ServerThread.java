@@ -6,7 +6,7 @@ import java.io.*;
 
 public class ServerThread implements Runnable {
 	
-	public final String MESSAGE_TO_END_CONNECTION = "Exit";
+	private static final String MESSAGE_TO_END_CONNECTION = "Exit";
 	StreamSocket myDataSocket;
 	private boolean sessionStarted = false;
 	
