@@ -13,10 +13,10 @@ public class EchoClientHelper2 {
 
 	   EchoClientHelper2(String hostName, String portNum) throws SocketException, UnknownHostException, IOException {
 	  	   this.serverHost = InetAddress.getByName(hostName);
-	  		this.serverPort = Integer.parseInt(portNum);
-	      //Instantiates a stream-mode socket and wait for a connection.
-	   	this.mySocket = new ClientSocket(this.serverHost, this.serverPort); 
-	/**/  System.out.println("Connection request made");
+	  	   this.serverPort = Integer.parseInt(portNum);
+	       //Instantiates a stream-mode socket and wait for a connection.
+	   	   this.mySocket = new ClientSocket(this.serverHost, this.serverPort); 
+	/**/   System.out.println("Connection request made");
 	   } // end constructor
 		
 	   public String getEcho( String message) throws SocketException, IOException {     
@@ -27,7 +27,7 @@ public class EchoClientHelper2 {
 	      return echo;
 	   } // end getEcho
 
-	   public void done( ) throws SocketException, IOException {
+	   public void terminateSession() throws SocketException, IOException {
 	      mySocket.sendMessage(MESSAGE_TO_END_CONNECTION);
 	      mySocket.close();
 	   } // end done 

@@ -11,15 +11,19 @@ public class EchoClient2 {
       public void startClient() {
     	 try {
          EchoClientHelper2 helper = new EchoClientHelper2(getHostName(), getPortNumber());
-         boolean done = false;
-         String message, echo;
-         while (!done) {
-            System.out.println("Enter a line to receive an echo "
-               + "from the server, or a single period to quit.");
+         boolean sessionStarted = true;
+         
+         String message; 
+         String echo;
+         
+         while (sessionStarted) {
+            System.out.println("Enter a line to receive an echo " + "from the server, or a single period to quit.");
+
             message = br.readLine( );
+            
             if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
-               done = true;
-               helper.done( );
+               sessionStarted = false;
+               helper.terminateSession();
             }
             else {
                echo = helper.getEcho( message);
@@ -34,7 +38,7 @@ public class EchoClient2 {
      }
       
       
-      public String getHostName() throws IOException {
+      public String getHostName() {
     	  System.out.println("Welcome to the Echo client.\n" +
     	            "What is the name of the server host?");
     	  String hostName = "";
