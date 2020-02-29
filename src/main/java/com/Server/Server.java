@@ -1,4 +1,4 @@
-package Server;
+package com.Server;
 
 import java.io.*;
 import java.net.*;
@@ -9,7 +9,7 @@ public class Server {
 	private static final int SERVER_PORT = 5094;
 	private boolean isServerListening = false;
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
-	private String userRequest = "";
+	
 	
 	
 	public void startServer(){
@@ -38,17 +38,9 @@ public class Server {
 	
 	public void waitForConnection(ServerSocket serverSocket) throws IOException {
 		while (isServerListening) {
-			// wait for a connection
+			
 			System.out.println("Waiting for a connection");
-			
-			userRequest = READER.readLine();
-			
-			
-			if (userRequest.equalsIgnoreCase("Exit")) {
-				System.out.println("Server shutting down ....");
-				serverSocket.close();
-				break;
-			}
+
 			
 			StreamSocket myDataSocket = new StreamSocket(serverSocket.accept());
 			System.out.println("Connection accepted");

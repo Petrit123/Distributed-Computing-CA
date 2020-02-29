@@ -1,14 +1,15 @@
-package Server;
+package com.Server;
 
 import java.net.*;
 import java.io.*;
 
 public class StreamSocket extends Socket {
+	
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
 	
-	StreamSocket(InetAddress acceptorHost, int acceptorPort) throws SocketException, IOException {
+	public StreamSocket(InetAddress acceptorHost, int acceptorPort) throws SocketException, IOException {
 		socket = new Socket(acceptorHost, acceptorPort);
 		setStreams();
 	}
@@ -19,6 +20,7 @@ public class StreamSocket extends Socket {
 	}
 	
 	private void setStreams() throws IOException {
+		
 		// get an input stream for reading from the data socket
 		InputStream inStream = socket.getInputStream();
 		input = new BufferedReader(new InputStreamReader(inStream));

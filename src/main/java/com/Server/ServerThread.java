@@ -1,4 +1,4 @@
-package Server;
+package com.Server;
 
 import java.io.*;
 
@@ -29,12 +29,12 @@ public class ServerThread implements Runnable {
 				else {
 					// Now send the echo to the requestor
 					myDataSocket.sendMessage(message);
-				} // end else
-			} // end while !done
-		} // end try
+				} 
+			} 
+		} 
 		catch (Exception ex) {
 			System.out.println("Exception caught in thread: " + ex);
-		} // end catch
-	} // end run
-
-} // end class
+		} 
+	} 
+	
+} 
