@@ -4,32 +4,46 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-	public static void main(String[] args) {
-		int serverPort = 7; // default port
-		String message;
+	
+	private static final int SERVER_PORT = 5094;
+	private boolean isServerListening = false;
+	
+	
+	public void startServer(){
 		
-		if (args.length == 1)
-			serverPort = Integer.parseInt(args[0]);
 		try {
-			// instantiates a stream socket for accepting connections
+			ServerSocket myConnectionSocket = new ServerSocket(SERVER_PORT);
+			System.out.println("Server is ready for connections");
 			
-		ServerSocket myConnectionSocket = new ServerSocket(serverPort);
-		System.out.println("Echo server ready.");
-		while (true) {  // forever loop
-			// wait to accept a connection
-			System.out.println("Waiting for a connection.");
-			StreamSocket myDataSocket = new StreamSocket(myConnectionSocket.accept());
-			System.out.println("connection accepted");
-			// Start a thread to handle this client's session
-			Thread theThread = new Thread(new ServerThread(myDataSocket));
-			theThread.start();
-			// and go on to the next client
-		} // end while forever
+			listenForConnection();
+			waitForConnection(myConnectionSocket);
+			
 		} // end try
 		
 		catch (Exception ex) {
 			ex.printStackTrace();
-		} // end catch
-	} // end main
+		}
+	}
+	
+	
+	public void listenForConnection() {
+		if (!isServerListening) {
+			isServerListening = true;
+		}
+	}
+	
+	public void waitForConnection(ServerSocket serverSocket) throws IOException {
+		while (isServerListening) {
+			// wait for a connection
+			System.out.println("Waiting for a connection");
+			StreamSocket myDataSocket = new StreamSocket(serverSocket.accept());
+			System.out.println("Connection accepted");
+			
+			// Start a thread to handle this client's session
+			Thread theThread = new Thread(new ServerThread(myDataSocket));
+			theThread.start();
+		}
+	}
 
-} // end class
+}
+
