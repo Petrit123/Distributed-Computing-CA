@@ -4,7 +4,7 @@ import java.io.*;
 
 
 public class EchoClient2 {
-   static final String endMessage = ".";
+   static final String endMessage = "Exit";
    public static void main(String[] args) {
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
@@ -26,7 +26,7 @@ public class EchoClient2 {
             System.out.println("Enter a line to receive an echo "
                + "from the server, or a single period to quit.");
             message = br.readLine( );
-            if ((message.trim()).equals (endMessage)){
+            if ((message.trim()).equalsIgnoreCase(endMessage)){
                done = true;
                helper.done( );
             }

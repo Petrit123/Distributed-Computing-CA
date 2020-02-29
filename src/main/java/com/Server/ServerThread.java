@@ -6,25 +6,26 @@ import java.io.*;
 
 public class ServerThread implements Runnable {
 	
-	public static final String endMessage = ".";
+	public final String MESSAGE_TO_END_CONNECTION = "Exit";
 	StreamSocket myDataSocket;
+	private boolean sessionStarted = false;
 	
 	ServerThread(StreamSocket myDataSocket) {
 		this.myDataSocket = myDataSocket;
 	}
 	
 	public void run() {
-		boolean done = false;
+		sessionStarted = true;
 		String message;
 		try {
-			while (!done) {
+			while (sessionStarted) {
 				message = myDataSocket.receiveMessage();
 				System.out.println("Message received: " + message);
-				if ((message.trim()).equals(endMessage)) {
+				if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)) {
 					// Session over; close the data socket.
 					System.out.println("Session over.");
 					myDataSocket.close();
-					done = true;
+					sessionStarted = false;
 				} // end if
 				else {
 					// Now send the echo to the requestor

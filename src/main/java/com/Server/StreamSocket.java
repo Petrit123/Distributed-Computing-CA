@@ -9,6 +9,7 @@ public class StreamSocket extends Socket {
 	private BufferedReader input;
 	private PrintWriter output;
 	
+	
 	public StreamSocket(InetAddress acceptorHost, int acceptorPort) throws SocketException, IOException {
 		socket = new Socket(acceptorHost, acceptorPort);
 		setStreams();

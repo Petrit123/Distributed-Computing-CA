@@ -8,10 +8,7 @@ public class Server {
 	
 	private static final int SERVER_PORT = 5094;
 	private boolean isServerListening = false;
-	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
-	
-	
-	
+
 	public void startServer(){
 		
 		try {
@@ -40,7 +37,6 @@ public class Server {
 		while (isServerListening) {
 			
 			System.out.println("Waiting for a connection");
-
 			
 			StreamSocket myDataSocket = new StreamSocket(serverSocket.accept());
 			System.out.println("Connection accepted");

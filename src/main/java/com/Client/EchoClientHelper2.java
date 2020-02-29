@@ -6,7 +6,7 @@ import com.Server.StreamSocket;;
 
 public class EchoClientHelper2 {
 
-	   static final String endMessage = ".";
+	   static final String endMessage = "Exit";
        public StreamSocket mySocket;
 	   public InetAddress serverHost;
 	   public int serverPort;
