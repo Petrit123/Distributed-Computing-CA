@@ -2,12 +2,12 @@ package com.Client;
 
 import java.net.*;
 import java.io.*;
-import com.Server.StreamSocket;;
+import com.Server.ClientSocket;;
 
 public class EchoClientHelper2 {
 
 	   private static final String MESSAGE_TO_END_CONNECTION = "Exit";
-       public StreamSocket mySocket;
+       public ClientSocket mySocket;
 	   public InetAddress serverHost;
 	   public int serverPort;
 
@@ -15,7 +15,7 @@ public class EchoClientHelper2 {
 	  	   this.serverHost = InetAddress.getByName(hostName);
 	  		this.serverPort = Integer.parseInt(portNum);
 	      //Instantiates a stream-mode socket and wait for a connection.
-	   	this.mySocket = new StreamSocket(this.serverHost, this.serverPort); 
+	   	this.mySocket = new ClientSocket(this.serverHost, this.serverPort); 
 	/**/  System.out.println("Connection request made");
 	   } // end constructor
 		
@@ -29,6 +29,6 @@ public class EchoClientHelper2 {
 
 	   public void done( ) throws SocketException, IOException {
 	      mySocket.sendMessage(MESSAGE_TO_END_CONNECTION);
-	      mySocket.close( );
+	      mySocket.close();
 	   } // end done 
 	} //end class

@@ -3,14 +3,14 @@ package com.Server;
 import java.net.*;
 import java.io.*;
 
-public class StreamSocket extends Socket {
+public class ClientSocket {
 	
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
-		
-	StreamSocket(Socket socket) throws IOException {
-		this.socket = socket;
+
+	public ClientSocket(InetAddress acceptorHost, int acceptorPort) throws SocketException, IOException {
+		socket = new Socket(acceptorHost, acceptorPort);
 		setStreams();
 	}
 	
@@ -45,4 +45,4 @@ public class StreamSocket extends Socket {
 		socket.close();
 	}
 	
-} // end class
+}

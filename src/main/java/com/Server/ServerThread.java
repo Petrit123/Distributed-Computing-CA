@@ -7,15 +7,14 @@ import java.io.*;
 public class ServerThread implements Runnable {
 	
 	private static final String MESSAGE_TO_END_CONNECTION = "Exit";
-	StreamSocket myDataSocket;
-	private boolean sessionStarted = false;
+	public StreamSocket myDataSocket;
 	
 	ServerThread(StreamSocket myDataSocket) {
 		this.myDataSocket = myDataSocket;
 	}
 	
 	public void run() {
-		sessionStarted = true;
+		boolean sessionStarted = true;
 		String message;
 		try {
 			while (sessionStarted) {
