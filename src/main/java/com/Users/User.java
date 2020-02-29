@@ -1,5 +1,9 @@
 package com.Users;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class User {
 		
 	private String userName;
@@ -12,6 +16,10 @@ public class User {
 		this.passWord = passWord;
 		this.isLoggedIn = isLoggedIn;
 		this.sessionId = sessionId;
+	}
+	
+	public User() {
+		
 	}
 	
 	public String getUserName() {
