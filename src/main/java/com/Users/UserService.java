@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +17,6 @@ import java.util.Scanner;
 
 public class UserService {
 	
-	private static final String filePathThatStoresUserLoginInfo = "C:\\CAUsers\\";
 	private File file = new File("users.txt");
 	private User user = new User();
 	private List<User> users = new ArrayList<User>();
@@ -28,9 +28,7 @@ public class UserService {
 		try {
 		System.out.println("To create a new user please specify a valid username: ");
 		String enteredUserName = READER.readLine();
-//		if (!isValidUserName(enteredUserName)) {
-//			createUser();
-//		} 
+		isValidUserName(enteredUserName);
 		user.setUserName(enteredUserName);
 		System.out.println("Please enter in your new password: ");
 		READER.readLine();
@@ -61,27 +59,28 @@ public class UserService {
 		
  }
 	
-	public boolean isValidUserName(String userName) {
+	public String isValidUserName(String userName) {
 		
-		boolean isValidUser = true;
+		String validUserName = userName;
 		
 		try {
-		Scanner sc = new Scanner(file);
-		while (sc.hasNextLine()) {
-			String existingUserName = sc.nextLine();
-			if (existingUserName.contains(userName)) {
-				System.out.println("Username already exists.");
-				isValidUser = false;
+		BufferedReader br = new BufferedReader(new FileReader("Users.txt.txt"));
+		String existingUserName = br.readLine();
+		while (existingUserName != null) {
+			if (userName.equalsIgnoreCase(existingUserName.substring(0, existingUserName.indexOf(":")))) {
+				System.out.println("Username already exists... \n Please enter another username");
+				validUserName = READER.readLine();
 				break;
 			}
+			break;
 		}
-		sc.close();
+		br.close();
 		} catch (IOException e) {
 			System.out.println("Error in validating user");
 			e.printStackTrace();
 		}
 		
-		return isValidUser;
+		return validUserName;
 	}
 	
 	public int getNumRows(String passwordInPlainText, int numColumns) {
