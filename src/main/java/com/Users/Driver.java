@@ -6,6 +6,12 @@ public class Driver {
 		UserService s = new UserService();
 		
 		s.createUser();
+		
+//		String message = s.encryptPassword("This is a sample text password to encrypt",2);
+//		
+//		System.out.print(message);
+//		
+//		System.out.println(s.decryptPassword(message, 2));
 	}
 
 }

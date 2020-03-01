@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +17,7 @@ import java.util.Scanner;
 public class UserService {
 	
 	private static final String filePathThatStoresUserLoginInfo = "C:\\CAUsers\\";
-	private File file = new File(filePathThatStoresUserLoginInfo + "\\users.txt");
+	private File file = new File("users.txt");
 	private User user = new User();
 	private List<User> users = new ArrayList<User>();
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
@@ -25,16 +28,16 @@ public class UserService {
 		try {
 		System.out.println("To create a new user please specify a valid username: ");
 		String enteredUserName = READER.readLine();
-		if (!isValidUserName(enteredUserName)) {
-			createUser();
-		} 
-		user.setUserName(READER.readLine());
+//		if (!isValidUserName(enteredUserName)) {
+//			createUser();
+//		} 
+		user.setUserName(enteredUserName);
 		System.out.println("Please enter in your new password: ");
 		READER.readLine();
 		System.out.println("Please confirm your password: ");
 		String secondPasswordEntered = READER.readLine();
-        user.setPassWord(secondPasswordEntered);
-        saveUserInfo(user.getUserName(), user.getPassWord());
+        user.setPassWord(encryptPassword(secondPasswordEntered, 2));
+        saveUserInfo(enteredUserName, secondPasswordEntered);
 		users.add(user);
 		} catch (IOException ex) {
 			System.out.println("Error in creating user");
@@ -45,40 +48,18 @@ public class UserService {
 	
 	public void saveUserInfo(String userName, String password) throws IOException {
 		
-	if (!file.exists()) {
-		System.out.println("Making directory " + file);
 		try {
-			file.mkdir();
-			System.out.println(file + " has successfully been created");
-            
-			writeUserInfoToFile(userName, password);
-			
-			System.out.println("User " + userName + " has been successfully registered.");
-			
-		} catch(SecurityException e) {
-			e.printStackTrace();
-		}
-	} else {
-		
-		writeUserInfoToFile(userName, password);
-		System.out.println("User " + userName + " has been successfully registered.");
-	}
- }
-	
-	public void writeUserInfoToFile(String userName, String password) throws IOException {
-		try {
-			String userLogInInfoFilePath = filePathThatStoresUserLoginInfo + "\\users.txt";
-			 BufferedWriter writer = new BufferedWriter (new FileWriter(userLogInInfoFilePath, true));
-			 writer.write("Username: " + userName);
-			 writer.newLine();
-			 writer.write("Password: " + password);
-			 writer.newLine();
+			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt.txt")));
+			 writer.write(userName+ ": ");
+			 writer.write(encryptPassword(password, 2));
 			 writer.close();
-		} catch (FileNotFoundException e) {
+			 System.out.println("Successfully saved to file");
+		}  catch (FileNotFoundException e) {
 			System.out.println("Error writing to file ");
 			e.printStackTrace();
 	      }
-	}
+		
+ }
 	
 	public boolean isValidUserName(String userName) {
 		
@@ -102,5 +83,44 @@ public class UserService {
 		
 		return isValidUser;
 	}
+	
+	public int getNumRows(String passwordInPlainText, int numColumns) {
+		passwordInPlainText = passwordInPlainText.replaceAll("\\s", "");
+		int numRows;
+		if (passwordInPlainText.length() % numColumns == 0) {
+			
+			numRows = (passwordInPlainText.length() / numColumns);
+		} else {
+			numRows = ((passwordInPlainText.length() / numColumns) + 1);
+		}
+		
+		return numRows;
+	}
+	
+	public String encryptPassword(String passwordInPlainText, int numColumns) {
+		passwordInPlainText = passwordInPlainText.replaceAll("\\s","");
+		
+		int numRows = getNumRows(passwordInPlainText, numColumns);
+		String encryptedText = "";
+		
+		for (int col = 0; col < numColumns; col++) {
+			int index = col;
+			
+			for (int row = 0; row < numRows; row ++) {
+				
+				encryptedText += passwordInPlainText.charAt(index);
+				index += numColumns;
+			}
+		}
+		
+		return encryptedText;
+	}
+	
+	public String decryptPassword(String encryptedPassword, int numColumns) {
+		encryptedPassword = encryptedPassword.replaceAll("\\s+", "");
+		int numRows = getNumRows(encryptedPassword,numColumns);
+		return encryptPassword(encryptedPassword, numRows);
+	}
+	
 
 }
