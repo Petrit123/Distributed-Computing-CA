@@ -2,7 +2,10 @@ package com.Client;
 
 import java.io.*;
 
+import com.Users.User;
 import com.Users.UserService;
+
+import TMP.TMPService;
 
 
 public class Client {
@@ -10,6 +13,9 @@ public class Client {
       public InputStreamReader is = new InputStreamReader(System.in);
       public BufferedReader br = new BufferedReader(is);
       public UserService s = new UserService();
+      public TMPService tmp = new TMPService();
+      public int sessionId = 0;
+      public User user;
       
       public void startClient() {
     	 try {
@@ -26,6 +32,7 @@ public class Client {
 
             message = br.readLine();
             
+            tmp.uploadMessage(user.getUserName(), message);
             
             if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
                sessionStarted = false;
@@ -82,6 +89,8 @@ public class Client {
         	  
         	  if (decision.equalsIgnoreCase("log in")) {
         		  s.logIn();
+        		  sessionId ++;
+        		  user = s.getLoggedInUserBySessionId(sessionId);
         	  } else if (decision.equalsIgnoreCase("sign up")) {
         		  s.createUser();
         	  } else {

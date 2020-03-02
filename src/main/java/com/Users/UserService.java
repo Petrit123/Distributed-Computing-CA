@@ -19,6 +19,7 @@ public class UserService {
 	
 	private File file = new File("users.txt");
 	private User user = new User();
+	private User userWitSessionId;
 	private List<User> users = new ArrayList<User>();
 	private List<User> loggedInUsers = new ArrayList<User>();
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
@@ -168,6 +169,17 @@ public class UserService {
 			System.out.print(loggedInUser.getUserName() + " is logged in");
 		}
 	}
-	
 
+	public User getLoggedInUserBySessionId(int sessionId) {
+		
+		for (User loggedInUser: loggedInUsers) {
+			if (loggedInUser.getSessionId() == sessionId) {
+				userWitSessionId = loggedInUser;
+				System.out.println(userWitSessionId.getUserName());
+				System.out.println(userWitSessionId.getSessionId());
+			}
+		}
+		
+		return userWitSessionId;
+	}
 }
