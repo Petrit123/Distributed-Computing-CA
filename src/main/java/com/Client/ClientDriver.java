@@ -12,5 +12,5 @@ public class ClientDriver {
 	   
 	   client.startClient();
 	   
-   } //end main
-} // end class
+   } 
+} 

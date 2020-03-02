@@ -7,8 +7,7 @@ public class Driver {
 		
 		//s.createUser();
 		
-		System.out.println(s.logIn("Petrit123", "Hello12345"));
-		System.out.println(s.logIn("Petrit123", "Hello12345"));
+
 		s.listLoggedInUsers();
 		
 		s.logOut("Petrit123");

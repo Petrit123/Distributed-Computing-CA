@@ -2,15 +2,20 @@ package com.Client;
 
 import java.io.*;
 
+import com.Users.UserService;
+
 
 public class Client {
       private static final String MESSAGE_TO_END_CONNECTION = "Exit";
       public InputStreamReader is = new InputStreamReader(System.in);
       public BufferedReader br = new BufferedReader(is);
+      public UserService s = new UserService();
       
       public void startClient() {
     	 try {
          ClientHelper helper = new ClientHelper(getHostName(), getPortNumber());
+         
+         displayLogOnScreen();
          boolean sessionStarted = true;
          
          String message; 
@@ -19,7 +24,8 @@ public class Client {
          while (sessionStarted) {
             System.out.println("Enter a line to receive an echo " + "from the server, or type exit to quit.");
 
-            message = br.readLine( );
+            message = br.readLine();
+            
             
             if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
                sessionStarted = false;
@@ -29,11 +35,11 @@ public class Client {
                echo = helper.getEcho( message);
                System.out.println(echo);
             }
-          } // end while
-      } // end try  
+          } 
+      }  
       catch (Exception ex) {
          ex.printStackTrace( );
-      } //end catch
+      } 
     	 
      }
       
@@ -69,4 +75,23 @@ public class Client {
           return portNumber;
       }
       
-} // end class
+      public void displayLogOnScreen() {
+    	  try {
+        	  System.out.println("Would you like to log in or sign up?");
+        	  String decision = br.readLine();
+        	  
+        	  if (decision.equalsIgnoreCase("log in")) {
+        		  s.logIn();
+        	  } else if (decision.equalsIgnoreCase("sign up")) {
+        		  s.createUser();
+        	  } else {
+        		  System.out.println("Sorry, please enter in a valid option");
+        	  }
+    	  } catch (IOException e) {
+    		  System.out.println("Error in displaying log on screen");
+    		  e.printStackTrace();
+    	  }
+
+      }
+      
+} 

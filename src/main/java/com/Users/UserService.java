@@ -84,11 +84,14 @@ public class UserService {
 		return validUserName;
 	}
 	
-	public boolean logIn(String userName, String password) {
-		
-		password = encryptPassword(password, 2);
-		
+	public boolean logIn() {
 		try {
+
+			System.out.println("Please enter in your username to continue:");
+			String userName = READER.readLine();
+			System.out.println("Please enter in your password");
+			String password = READER.readLine();
+			password = encryptPassword(password, 2);
 			BufferedReader br = new BufferedReader(new FileReader("Users.txt.txt"));
 			String userNameInFile = br.readLine();
 			while (userNameInFile != null) {
@@ -100,6 +103,7 @@ public class UserService {
                 }
                 break;
 		}
+		br.close();
 	} catch (IOException e) {
 		System.out.println("Error in validating user log in details");
 		e.printStackTrace();
