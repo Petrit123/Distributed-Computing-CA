@@ -1,6 +1,7 @@
 package com.TMP;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -14,6 +15,12 @@ public class TMPService {
 	public void uploadMessage(String userName, String message) {
 		
 		try {
+			
+			File userNameFile = new File(userName);
+			
+			if (!userNameFile.exists()) {
+				userNameFile.mkdir();
+			}
 			
 			if (message.length() > MESSAGE_LIMIT) {
 				message = message.substring(0, MESSAGE_LIMIT);

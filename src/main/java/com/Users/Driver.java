@@ -1,16 +1,17 @@
 package com.Users;
 
+import java.io.IOException;
+
 public class Driver {
 	public static void main(String[] args) {
 		
 		UserService s = new UserService();
 		
 		//s.createUser();
-		
 
-		s.listLoggedInUsers();
+		//s.listLoggedInUsers();
 		
-		s.logOut("Petrit123");
+		//s.logOut("Petrit123");
 		//s.listLoggedInUsers();
 		
 		

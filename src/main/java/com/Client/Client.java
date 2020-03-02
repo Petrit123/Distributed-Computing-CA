@@ -5,7 +5,7 @@ import java.io.*;
 import com.TMP.TMPService;
 import com.Users.User;
 import com.Users.UserService;
-
+import com.GUI.*;
 
 public class Client {
       private static final String MESSAGE_TO_END_CONNECTION = "Exit";
@@ -18,9 +18,10 @@ public class Client {
       
       public void startClient() {
     	 try {
+    		 
+
          ClientHelper helper = new ClientHelper(getHostName(), getPortNumber());
          
-         displayLogOnScreen();
          boolean sessionStarted = true;
          
          String message; 
@@ -101,5 +102,27 @@ public class Client {
     	  }
 
       }
+      
+public void displayHomeScreen() {
+	HomeScreen2 window = new HomeScreen2();
+	window.frame.setVisible(true);
+	
+	try {
+		for (int i = 0; i <= 100; i++) {
+			Thread.sleep(30);
+			window.lblNewLabel.setText(Integer.toString(i));
+			window.progressBar.setValue(i);
+			if (i == 100) {
+				window.frame.setVisible(false);
+				ConnectToServerForm frame = new ConnectToServerForm();
+				frame.setVisible(true);
+			}
+		}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+
+}
       
 } 
