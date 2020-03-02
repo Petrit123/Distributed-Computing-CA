@@ -108,6 +108,17 @@ public class UserService {
 		return false;
 	}
 	
+	public void logOut(String userName) {
+		
+		for (User loggedInUser: loggedInUsers) {
+			
+			if (userName.equals(loggedInUser.getUserName())) {
+				
+				System.out.print(loggedInUser.getUserName() + " has successfully logged out.");
+				loggedInUsers.remove(loggedInUser);
+			}
+		}
+	}
 	
 	public int getNumRows(String passwordInPlainText, int numColumns) {
 		passwordInPlainText = passwordInPlainText.replaceAll("\\s", "");
