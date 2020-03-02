@@ -49,7 +49,7 @@ public class UserService {
 	public void saveUserInfo(String userName, String password) throws IOException {
 		
 		try {
-			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt.txt")));
+			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt")));
 			 writer.write(userName + ": ");
 			 writer.write(encryptPassword(password, 2));
 			 writer.close();
@@ -66,7 +66,7 @@ public class UserService {
 		String validUserName = userName;
 		
 		try {
-		BufferedReader br = new BufferedReader(new FileReader("Users.txt.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
 		String existingUserName = br.readLine();
 		while (existingUserName != null) {
 			if (userName.equalsIgnoreCase(existingUserName.substring(0, existingUserName.indexOf(":")))) {
@@ -93,7 +93,7 @@ public class UserService {
 			System.out.println("Please enter in your password");
 			String password = READER.readLine();
 			password = encryptPassword(password, 2);
-			BufferedReader br = new BufferedReader(new FileReader("Users.txt.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
 			String userNameInFile = br.readLine();
 			while (userNameInFile != null) {
                 if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {

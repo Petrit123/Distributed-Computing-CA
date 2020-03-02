@@ -1,4 +1,4 @@
-package TMP;
+package com.TMP;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -17,8 +17,7 @@ public class TMPService {
 			
 			if (message.length() > MESSAGE_LIMIT) {
 				message = message.substring(0, MESSAGE_LIMIT);
-			}
-			
+			}			
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userName + "/" + userName + "Messages.txt", true), StandardCharsets.UTF_8));
 			bw.newLine();
 			bw.append(message);
