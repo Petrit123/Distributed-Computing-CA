@@ -8,6 +8,7 @@ public class Driver {
 		//s.createUser();
 		
 		System.out.println(s.logIn("Petrit123", "Hello12345"));
+		s.listLoggedInUsers();
 		
 		
 //		String message = s.encryptPassword("This is a sample text password to encrypt",2);

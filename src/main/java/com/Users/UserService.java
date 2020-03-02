@@ -20,7 +20,9 @@ public class UserService {
 	private File file = new File("users.txt");
 	private User user = new User();
 	private List<User> users = new ArrayList<User>();
+	private List<User> loggedInUsers = new ArrayList<User>();
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
+	private int sessionId = 0;
 	
 	public void createUser() {
 		
@@ -92,6 +94,8 @@ public class UserService {
 			while (userNameInFile != null) {
                 if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
                 	System.out.println("Credentials are valid");
+                	sessionId ++;
+                	loggedInUsers.add(new User(userName, password, true,sessionId));
                     return true;
                 }
                 break;
@@ -141,6 +145,13 @@ public class UserService {
 		encryptedPassword = encryptedPassword.replaceAll("\\s+", "");
 		int numRows = getNumRows(encryptedPassword,numColumns);
 		return encryptPassword(encryptedPassword, numRows);
+	}
+	
+	public void listLoggedInUsers() {
+		
+		for(User loggedInUser: loggedInUsers) {
+			System.out.print(loggedInUser.getUserName() + " is logged in");
+		}
 	}
 	
 
