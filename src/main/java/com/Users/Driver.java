@@ -5,7 +5,10 @@ public class Driver {
 		
 		UserService s = new UserService();
 		
-		s.createUser();
+		//s.createUser();
+		
+		System.out.println(s.logIn("Petrit123", "Hello12345"));
+		
 		
 //		String message = s.encryptPassword("This is a sample text password to encrypt",2);
 //		

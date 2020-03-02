@@ -22,7 +22,6 @@ public class UserService {
 	private List<User> users = new ArrayList<User>();
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
 	
-	
 	public void createUser() {
 		
 		try {
@@ -48,7 +47,7 @@ public class UserService {
 		
 		try {
 			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt.txt")));
-			 writer.write(userName+ ": ");
+			 writer.write(userName + ": ");
 			 writer.write(encryptPassword(password, 2));
 			 writer.close();
 			 System.out.println("Successfully saved to file");
@@ -82,6 +81,29 @@ public class UserService {
 		
 		return validUserName;
 	}
+	
+	public boolean logIn(String userName, String password) {
+		
+		password = encryptPassword(password, 2);
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("Users.txt.txt"));
+			String userNameInFile = br.readLine();
+			while (userNameInFile != null) {
+                if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
+                	System.out.println("Credentials are valid");
+                    return true;
+                }
+                break;
+		}
+	} catch (IOException e) {
+		System.out.println("Error in validating user log in details");
+		e.printStackTrace();
+	}
+		
+		return false;
+	}
+	
 	
 	public int getNumRows(String passwordInPlainText, int numColumns) {
 		passwordInPlainText = passwordInPlainText.replaceAll("\\s", "");
