@@ -15,12 +15,14 @@ public class Client {
       public TMPService tmp = new TMPService();
       public int sessionId = 0;
       public User user;
+      ConnectToServerForm frame = new ConnectToServerForm();
+      
       
       public void startClient() {
     	 try {
     		 
-
-         ClientHelper helper = new ClientHelper(getHostName(), getPortNumber());
+    	//
+         ClientHelper helper = new ClientHelper(getHostName(), getPortNumber());         
          
          boolean sessionStarted = true;
          
@@ -52,32 +54,24 @@ public class Client {
       
       
       private String getHostName() {
-    	  System.out.println("Welcome to the Echo client.\n" +
-    	            "What is the name of the server host?");
-    	  String hostName = "";
-    	  try {
-    		  hostName = br.readLine();
+    	  String hostName = frame.hostName;
+    		  //hostName = br.readLine();
     		  if (hostName.length() == 0) {
     			  hostName = "localhost";
     		  }
-    	  } catch (IOException e) {
-    		  e.printStackTrace();
-    	  }
+    	  
     	  return hostName;
       }
       
       private String getPortNumber() {
 
-    	  System.out.println("What is the port number of the server host?");
-          String portNumber = "";
-          try {
-        	  portNumber = br.readLine();
+          String portNumber = frame.portNumber;
+
+        	  //portNumber = br.readLine();
               if (portNumber.length() == 0) {
                   portNumber = "5094";          // default port number  
               }
-          }  catch (IOException e) {
-    		  e.printStackTrace();
-    	  }
+
           
           return portNumber;
       }
@@ -104,7 +98,7 @@ public class Client {
       }
       
 public void displayHomeScreen() {
-	HomeScreen2 window = new HomeScreen2();
+	HomeScreen window = new HomeScreen();
 	window.frame.setVisible(true);
 	
 	try {
@@ -114,8 +108,9 @@ public void displayHomeScreen() {
 			window.progressBar.setValue(i);
 			if (i == 100) {
 				window.frame.setVisible(false);
-				ConnectToServerForm frame = new ConnectToServerForm();
 				frame.setVisible(true);
+				
+				//break;
 			}
 		}
 		

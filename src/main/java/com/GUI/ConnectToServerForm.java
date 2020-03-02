@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import com.Client.Client;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -27,6 +30,8 @@ public class ConnectToServerForm extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtHostName;
 	private JTextField txtPortNumber;
+	public static String hostName;
+	public static String portNumber;
 
 	/**
 	 * Launch the application.
@@ -113,6 +118,17 @@ public class ConnectToServerForm extends JFrame {
 		panel_2.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Connect to server");
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				hostName = txtHostName.getText().toString();
+				portNumber = txtPortNumber.getText().toString();
+				System.out.println(hostName + " " + portNumber);
+				Client c = new Client();
+				c.startClient();
+				dispose();
+			}
+		});
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 14));
 		lblNewLabel.setBounds(69, 11, 144, 28);
