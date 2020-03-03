@@ -34,7 +34,7 @@ public class Client {
 
             message = br.readLine();
             
-            tmp.uploadMessage(user.getUserName(), message);
+            //tmp.uploadMessage(user.getUserName(), message);
             
             if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
                sessionStarted = false;

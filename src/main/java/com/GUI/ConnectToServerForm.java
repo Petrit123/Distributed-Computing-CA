@@ -23,6 +23,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.Cursor;
 
 public class ConnectToServerForm extends JFrame {
 
@@ -112,6 +113,7 @@ public class ConnectToServerForm extends JFrame {
 		panel_1.add(txtPortNumber);
 		
 		JPanel panel_2 = new JPanel();
+		panel_2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		panel_2.setBackground(new Color(47, 79, 79));
 		panel_2.setBounds(170, 288, 250, 50);
 		contentPane.add(panel_2);
@@ -127,6 +129,12 @@ public class ConnectToServerForm extends JFrame {
 				Client c = new Client();
 				c.startClient();
 				dispose();
+				setVisible(false);
+				LoginForm lf = new LoginForm();
+				lf.setVisible(true);
+//				//lf.pack();
+				lf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//				dispose();
 			}
 		});
 		lblNewLabel.setForeground(Color.WHITE);
