@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import com.TMP.TMPService;
 import com.Users.User;
 import com.Users.UserService;
@@ -17,7 +20,7 @@ public class Client {
       public TMPService tmp = new TMPService();
       public int sessionId = 0;
       public User user;
-      public ClientHelper helper;
+      public static ClientHelper helper;
       
       
       public void startClient(String hostName, String portNumber) {
@@ -33,32 +36,27 @@ public class Client {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}         
-         
-
-    	 
      }
       
-      private void startClientApplication() {
+      public static void startClientApplication(JTextArea textArea, String message) {
      	 try {
      		 
           boolean sessionStarted = true;
           
-          String message; 
           String echo;
           
-          while (sessionStarted) {
+          if (sessionStarted) {
              System.out.println("Enter a line to receive an echo " + "from the server, or type exit to quit.");
-
-             message = br.readLine();
-             
              //tmp.uploadMessage(user.getUserName(), message);
              
              if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
-                sessionStarted = false;
+                //sessionStarted = false;
                 helper.terminateSession();
+                System.out.print("Session terminated");
              }
-             else {
+             else if (message != "") {
                 echo = helper.getEcho( message);
+                textArea.append("\n" + echo);
                 System.out.println(echo);
              }
            } 
@@ -90,26 +88,6 @@ public class Client {
           return portNumber;
       }
       
-//      public void displayLogOnScreen() {
-//    	  try {
-//        	  System.out.println("Would you like to log in or sign up?");
-//        	  String decision = br.readLine();
-//        	  
-//        	  if (decision.equalsIgnoreCase("log in")) {
-//        		  //s.logIn();
-//        		  sessionId ++;
-//        		  user = s.getLoggedInUserBySessionId(sessionId);
-//        	  } else if (decision.equalsIgnoreCase("sign up")) {
-//        		  s.createUser();
-//        	  } else {
-//        		  System.out.println("Sorry, please enter in a valid option");
-//        	  }
-//    	  } catch (IOException e) {
-//    		  System.out.println("Error in displaying log on screen");
-//    		  e.printStackTrace();
-//    	  }
-//
-//      }
       
 public void displayHomeScreen() {
 	HomeScreen window = new HomeScreen();

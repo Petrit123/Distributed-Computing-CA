@@ -2,18 +2,26 @@ package com.GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.Client.Client;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 public class TMPPage extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel lblUser;
 	private JLabel lblSessionId;
+	public JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -42,18 +50,6 @@ public class TMPPage extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton uploadBtn = new JButton("Upload Message");
-		uploadBtn.setBounds(10, 117, 173, 30);
-		contentPane.add(uploadBtn);
-		
-		JButton downloadBtn = new JButton("Download Message");
-		downloadBtn.setBounds(10, 163, 173, 30);
-		contentPane.add(downloadBtn);
-		
-		JButton displayBtn = new JButton("Display sent messages");
-		displayBtn.setBounds(10, 216, 173, 30);
-		contentPane.add(displayBtn);
-		
 		JButton logOffBtn = new JButton("Log Off");
 		logOffBtn.setBounds(10, 339, 173, 30);
 		contentPane.add(logOffBtn);
@@ -67,8 +63,25 @@ public class TMPPage extends JFrame {
 		lblSessionId.setBounds(10, 47, 81, 14);
 		contentPane.add(lblSessionId);
 		
+		textField = new JTextField();
+		textField.setBounds(189, 339, 633, 30);
+		contentPane.add(textField);
+		textField.setColumns(10);
 		
-		
+		final JTextArea textArea = new JTextArea();
+		textArea.setBounds(189, 42, 631, 288);
+		textArea.append("Welcome!  Enter a line to receive an echo from the server, or type exit to quit.");
+		contentPane.add(textArea);		
+		JButton btnNewButton = new JButton("Upload");
+		btnNewButton.setBounds(828, 339, 114, 30);
+		contentPane.add(btnNewButton);
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Client.startClientApplication(textArea, textField.getText().toString());
+				System.out.println(textField.getText().toString());
+			}
+		});
 		setLocationRelativeTo(null);
 	}
 	
