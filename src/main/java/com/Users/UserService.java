@@ -25,20 +25,15 @@ public class UserService {
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
 	private int sessionId = 0;
 	
-	public void createUser() {
+	public void createUser(String userName, String password) {
 		
 		try {
-		System.out.println("To create a new user please specify a valid username: ");
-		String enteredUserName = READER.readLine();
-		isValidUserName(enteredUserName);
-		user.setUserName(enteredUserName);
-		System.out.println("Please enter in your new password: ");
-		READER.readLine();
-		System.out.println("Please confirm your password: ");
-		String secondPasswordEntered = READER.readLine();
-        user.setPassWord(encryptPassword(secondPasswordEntered, 2));
-        saveUserInfo(enteredUserName, secondPasswordEntered);
+		isValidUserName(userName);
+		user.setUserName(userName);
+        user.setPassWord(encryptPassword(password, 2));
+        saveUserInfo(userName, password);
 		users.add(user);
+		System.out.println("Successfully registered user " + userName);
 		} catch (IOException ex) {
 			System.out.println("Error in creating user");
 			ex.printStackTrace();
@@ -90,6 +85,7 @@ public class UserService {
 			password = encryptPassword(password, 2);
 			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
 			String userNameInFile = br.readLine();
+			System.out.println(userNameInFile.substring(userNameInFile.indexOf(':') + 2));
 			while (userNameInFile != null) {               	
                 if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
                 	System.out.println("Credentials are valid");
@@ -177,5 +173,9 @@ public class UserService {
 		}
 		
 		return userWitSessionId;
+	}
+	
+	public int getSessionId() {
+		return sessionId;
 	}
 }

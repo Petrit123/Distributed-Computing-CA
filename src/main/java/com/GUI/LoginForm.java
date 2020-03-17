@@ -135,6 +135,10 @@ public class LoginForm extends JFrame {
 				password = user.encryptPassword(password, 2);
 				System.out.println(userName + " " + password);
 				System.out.print(user.logIn(userName, password));
+				TMPPage frame = new TMPPage();
+				frame.displayUserDetails(userName, user.getSessionId());
+				frame.setVisible(true);
+				dispose();
 			}			
 		});
 		panel_1.add(btnNewButton);

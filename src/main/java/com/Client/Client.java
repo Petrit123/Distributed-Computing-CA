@@ -90,26 +90,26 @@ public class Client {
           return portNumber;
       }
       
-      public void displayLogOnScreen() {
-    	  try {
-        	  System.out.println("Would you like to log in or sign up?");
-        	  String decision = br.readLine();
-        	  
-        	  if (decision.equalsIgnoreCase("log in")) {
-        		  //s.logIn();
-        		  sessionId ++;
-        		  user = s.getLoggedInUserBySessionId(sessionId);
-        	  } else if (decision.equalsIgnoreCase("sign up")) {
-        		  s.createUser();
-        	  } else {
-        		  System.out.println("Sorry, please enter in a valid option");
-        	  }
-    	  } catch (IOException e) {
-    		  System.out.println("Error in displaying log on screen");
-    		  e.printStackTrace();
-    	  }
-
-      }
+//      public void displayLogOnScreen() {
+//    	  try {
+//        	  System.out.println("Would you like to log in or sign up?");
+//        	  String decision = br.readLine();
+//        	  
+//        	  if (decision.equalsIgnoreCase("log in")) {
+//        		  //s.logIn();
+//        		  sessionId ++;
+//        		  user = s.getLoggedInUserBySessionId(sessionId);
+//        	  } else if (decision.equalsIgnoreCase("sign up")) {
+//        		  s.createUser();
+//        	  } else {
+//        		  System.out.println("Sorry, please enter in a valid option");
+//        	  }
+//    	  } catch (IOException e) {
+//    		  System.out.println("Error in displaying log on screen");
+//    		  e.printStackTrace();
+//    	  }
+//
+//      }
       
 public void displayHomeScreen() {
 	HomeScreen window = new HomeScreen();
