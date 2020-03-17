@@ -1,6 +1,8 @@
 package com.Client;
 
 import java.io.*;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import com.TMP.TMPService;
 import com.Users.User;
@@ -15,46 +17,59 @@ public class Client {
       public TMPService tmp = new TMPService();
       public int sessionId = 0;
       public User user;
-      ConnectToServerForm frame = new ConnectToServerForm();
+      public ClientHelper helper;
       
       
-      public void startClient() {
-    	 try {
-    		 
-    	//
-         ClientHelper helper = new ClientHelper(getHostName(), getPortNumber());         
+      public void startClient(String hostName, String portNumber) {
+         try {
+			helper = new ClientHelper(getHostName(hostName), getPortNumber(portNumber));
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}         
          
-         boolean sessionStarted = true;
-         
-         String message; 
-         String echo;
-         
-         while (sessionStarted) {
-            System.out.println("Enter a line to receive an echo " + "from the server, or type exit to quit.");
 
-            message = br.readLine();
-            
-            //tmp.uploadMessage(user.getUserName(), message);
-            
-            if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
-               sessionStarted = false;
-               helper.terminateSession();
-            }
-            else {
-               echo = helper.getEcho( message);
-               System.out.println(echo);
-            }
-          } 
-      }  
-      catch (Exception ex) {
-         ex.printStackTrace( );
-      } 
     	 
      }
       
+      private void startClientApplication() {
+     	 try {
+     		 
+          boolean sessionStarted = true;
+          
+          String message; 
+          String echo;
+          
+          while (sessionStarted) {
+             System.out.println("Enter a line to receive an echo " + "from the server, or type exit to quit.");
+
+             message = br.readLine();
+             
+             //tmp.uploadMessage(user.getUserName(), message);
+             
+             if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
+                sessionStarted = false;
+                helper.terminateSession();
+             }
+             else {
+                echo = helper.getEcho( message);
+                System.out.println(echo);
+             }
+           } 
+       }  
+       catch (Exception ex) {
+          ex.printStackTrace( );
+       } 
+      }
       
-      private String getHostName() {
-    	  String hostName = frame.hostName;
+      private String getHostName(String hostName) {
+    	  
     		  //hostName = br.readLine();
     		  if (hostName.length() == 0) {
     			  hostName = "localhost";
@@ -63,9 +78,8 @@ public class Client {
     	  return hostName;
       }
       
-      private String getPortNumber() {
+      private String getPortNumber(String portNumber) {
 
-          String portNumber = frame.portNumber;
 
         	  //portNumber = br.readLine();
               if (portNumber.length() == 0) {
@@ -82,7 +96,7 @@ public class Client {
         	  String decision = br.readLine();
         	  
         	  if (decision.equalsIgnoreCase("log in")) {
-        		  s.logIn();
+        		  //s.logIn();
         		  sessionId ++;
         		  user = s.getLoggedInUserBySessionId(sessionId);
         	  } else if (decision.equalsIgnoreCase("sign up")) {
@@ -100,6 +114,7 @@ public class Client {
 public void displayHomeScreen() {
 	HomeScreen window = new HomeScreen();
 	window.frame.setVisible(true);
+     ConnectToServerForm frame = new ConnectToServerForm();
 	
 	try {
 		for (int i = 0; i <= 100; i++) {

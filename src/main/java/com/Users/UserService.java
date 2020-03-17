@@ -85,26 +85,22 @@ public class UserService {
 		return validUserName;
 	}
 	
-	public boolean logIn() {
+	public boolean logIn(String userName, String password) {
 		try {
-
-			System.out.println("Please enter in your username to continue:");
-			String userName = READER.readLine();
-			System.out.println("Please enter in your password");
-			String password = READER.readLine();
 			password = encryptPassword(password, 2);
 			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
 			String userNameInFile = br.readLine();
-			while (userNameInFile != null) {
+			while (userNameInFile != null) {               	
                 if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
                 	System.out.println("Credentials are valid");
                 	sessionId ++;
                 	loggedInUsers.add(new User(userName, password, true,sessionId));
                     return true;
+
                 }
                 break;
 		}
-		br.close();
+			br.close();
 	} catch (IOException e) {
 		System.out.println("Error in validating user log in details");
 		e.printStackTrace();

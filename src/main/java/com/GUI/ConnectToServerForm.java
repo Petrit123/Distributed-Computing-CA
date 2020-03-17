@@ -21,6 +21,8 @@ import java.awt.Image;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Cursor;
@@ -31,8 +33,8 @@ public class ConnectToServerForm extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtHostName;
 	private JTextField txtPortNumber;
-	public static String hostName;
-	public static String portNumber;
+	public  String hostName;
+	public  String portNumber;
 
 	/**
 	 * Launch the application.
@@ -123,18 +125,15 @@ public class ConnectToServerForm extends JFrame {
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				LoginForm lf = new LoginForm();
 				hostName = txtHostName.getText().toString();
 				portNumber = txtPortNumber.getText().toString();
-				System.out.println(hostName + " " + portNumber);
 				Client c = new Client();
-				c.startClient();
-				dispose();
-				setVisible(false);
-				LoginForm lf = new LoginForm();
+				c.startClient(hostName, portNumber);
 				lf.setVisible(true);
-//				//lf.pack();
 				lf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//				dispose();
+				setVisible(false);
+				dispose();
 			}
 		});
 		lblNewLabel.setForeground(Color.WHITE);

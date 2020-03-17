@@ -25,7 +25,7 @@ public class ClientHelper {
 		   
 		   try {
 			   this.mySocket = new ClientSocket(serverHost, serverPort);
-			   JOptionPane.showMessageDialog(null, "Connection to server established successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+			   //JOptionPane.showMessageDialog(null, "Connection to server established successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
 		   } catch (Exception ex) {
 			   JOptionPane.showMessageDialog(null, "The server is off. Please turn on server to continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
 		   }

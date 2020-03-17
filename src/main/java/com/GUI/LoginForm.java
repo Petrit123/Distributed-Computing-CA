@@ -6,6 +6,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.Client.Client;
+import com.Users.UserService;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -122,6 +126,17 @@ public class LoginForm extends JFrame {
 		btnNewButton.setForeground(new Color(240, 248, 255));
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(251, 142, 114, 39);
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String userName = textField.getText();
+				String password = passwordField.getText();
+				UserService user = new UserService();
+				password = user.encryptPassword(password, 2);
+				System.out.println(userName + " " + password);
+				System.out.print(user.logIn(userName, password));
+			}			
+		});
 		panel_1.add(btnNewButton);
 		
 		JButton btnCancel = new JButton("Cancel");
