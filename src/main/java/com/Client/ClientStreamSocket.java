@@ -1,16 +1,19 @@
-package com.Server;
+package com.Client;
 
 import java.net.*;
+
+import Requests.Request;
+
 import java.io.*;
 
-public class StreamSocket extends Socket {
+public class ClientStreamSocket {
 	
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
-		
-	StreamSocket(Socket socket) throws IOException {
-		this.socket = socket;
+
+	public ClientStreamSocket(InetAddress acceptorHost, int acceptorPort) throws SocketException, IOException {
+		socket = new Socket(acceptorHost, acceptorPort);
 		setStreams();
 	}
 	
@@ -35,6 +38,12 @@ public class StreamSocket extends Socket {
 		// end message
 	}
 	
+	public Request receiveRequest() throws IOException {
+		Request request = Request.DOWNLOAD;
+		return request;
+	}
+
+
 	public String receiveMessage() throws IOException {
 		// read a line from the data stream
 		String message = input.readLine();
@@ -45,4 +54,4 @@ public class StreamSocket extends Socket {
 		socket.close();
 	}
 	
-} // end class
+}

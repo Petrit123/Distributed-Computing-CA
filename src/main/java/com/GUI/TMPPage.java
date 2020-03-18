@@ -79,9 +79,9 @@ public class TMPPage extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Client.startClientApplication(textArea, textField.getText().toString());
-				System.out.println(textField.getText().toString());
 			}
 		});
+		
 		setLocationRelativeTo(null);
 	}
 	

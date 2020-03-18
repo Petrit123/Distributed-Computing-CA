@@ -41,6 +41,12 @@ public class UserService {
 		}
 	}
 	
+	public void addUserToListOfUsers(String userName, String password) {
+		user.setUserName(userName);
+		user.setPassWord(password);
+		users.add(user);
+	}
+	
 	public void saveUserInfo(String userName, String password) throws IOException {
 		
 		try {
@@ -173,6 +179,14 @@ public class UserService {
 		}
 		
 		return userWitSessionId;
+	}
+	
+	public void getUsersAdd() {
+		
+		for (User users: users) {
+			System.out.print(users.getUserName());
+			System.out.print(users.getPassWord());
+		}
 	}
 	
 	public int getSessionId() {

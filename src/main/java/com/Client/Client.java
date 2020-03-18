@@ -10,6 +10,9 @@ import javax.swing.JTextField;
 import com.TMP.TMPService;
 import com.Users.User;
 import com.Users.UserService;
+
+import Requests.Request;
+
 import com.GUI.*;
 
 public class Client {
@@ -44,19 +47,16 @@ public class Client {
           boolean sessionStarted = true;
           
           String echo;
-          
-          if (sessionStarted) {
-             System.out.println("Enter a line to receive an echo " + "from the server, or type exit to quit.");
+          while (sessionStarted) {
              //tmp.uploadMessage(user.getUserName(), message);
-             
              if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
-                //sessionStarted = false;
+                sessionStarted = false;
                 helper.terminateSession();
                 System.out.print("Session terminated");
              }
-             else if (message != "") {
-                echo = helper.getEcho( message);
-                textArea.append("\n" + echo);
+             else if (message != "") {;
+                echo = helper.getEcho(message);
+                textArea.append("\n Message sent: " + message + "\n Server Response: " + echo);
                 System.out.println(echo);
              }
            } 
@@ -65,6 +65,7 @@ public class Client {
           ex.printStackTrace( );
        } 
       }
+
       
       private String getHostName(String hostName) {
     	  

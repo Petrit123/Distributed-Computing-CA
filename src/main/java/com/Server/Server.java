@@ -38,7 +38,7 @@ public class Server {
 			
 			System.out.println("Waiting for a connection");
 			
-			StreamSocket myDataSocket = new StreamSocket(serverSocket.accept());
+			ServerStreamSocket myDataSocket = new ServerStreamSocket(serverSocket.accept());
 			System.out.println("Connection accepted");
 			
 			// Start a thread to handle this client's session

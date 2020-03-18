@@ -10,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import com.Client.Client;
 import com.Users.UserService;
 
+import Requests.Request;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -17,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.SocketException;
 import java.awt.Cursor;
 import javax.swing.JButton;
 
@@ -132,9 +136,11 @@ public class LoginForm extends JFrame {
 				String userName = textField.getText();
 				String password = passwordField.getText();
 				UserService user = new UserService();
-				password = user.encryptPassword(password, 2);
-				System.out.println(userName + " " + password);
-				System.out.print(user.logIn(userName, password));
+				//password = user.encryptPassword(password, 2);
+				//System.out.println(userName + " " + password);
+				//System.out.print(user.logIn(userName, password));
+				user.addUserToListOfUsers(userName, password);
+				user.getUsersAdd();
 				TMPPage frame = new TMPPage();
 				frame.displayUserDetails(userName, user.getSessionId());
 				frame.setVisible(true);
