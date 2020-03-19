@@ -7,7 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.Client.Client;
 import com.Users.UserService;
+
+import Requests.Request;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -130,10 +133,10 @@ public class RegistrationForm extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				String userName = textField.getText();
 				String password = passwordField.getText();
-				UserService user = new UserService();
-				password = user.encryptPassword(password, 2);
-				System.out.println(userName + " " + password);
-				user.createUser(userName, password);
+				//UserService user = new UserService();
+				//password = user.encryptPassword(password, 2);
+				//user.createUser(userName, password);
+				Client.sendUserRegistrationDetails("101", Request.SIGNUP, userName, password);
 			}			
 		});
 		panel_1.add(btnCreate);

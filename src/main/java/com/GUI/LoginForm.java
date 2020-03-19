@@ -135,17 +135,11 @@ public class LoginForm extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				String userName = textField.getText();
 				String password = passwordField.getText();
-				Client.sendUserLogInDetails("100 ", Request.LOGIN, userName, password);
-				UserService user = new UserService();
-				//password = user.encryptPassword(password, 2);
-				//System.out.println(userName + " " + password);
-				//System.out.print(user.logIn(userName, password));
-				user.addUserToListOfUsers(userName, password);
-				user.getUsersAdd();
-				TMPPage frame = new TMPPage();
-				frame.displayUserDetails(userName, user.getSessionId());
-				frame.setVisible(true);
-				dispose();
+				Client.sendUserLogInDetails("100", Request.LOGIN, userName, password);
+				//TMPPage frame = new TMPPage();
+				//frame.displayUserDetails(userName, user.getSessionId());
+				//frame.setVisible(true);
+				//dispose();
 			}			
 		});
 		panel_1.add(btnNewButton);

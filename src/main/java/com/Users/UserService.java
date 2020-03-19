@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import Responses.Response;
+
 public class UserService {
 	
 	private File file = new File("users.txt");
@@ -51,8 +53,8 @@ public class UserService {
 		
 		try {
 			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt")));
-			 writer.write(userName + ": ");
-			 writer.write(encryptPassword(password, 2));
+			 writer.append(userName + ": ");
+			 writer.append(encryptPassword(password, 2));
 			 writer.close();
 			 System.out.println("Successfully saved to file");
 		}  catch (FileNotFoundException e) {
@@ -86,7 +88,8 @@ public class UserService {
 		return validUserName;
 	}
 	
-	public boolean logIn(String userName, String password) {
+	public String logIn(String userName, String password) {
+		String logInResponse = ""; 
 		try {
 			password = encryptPassword(password, 2);
 			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
@@ -97,8 +100,10 @@ public class UserService {
                 	System.out.println("Credentials are valid");
                 	sessionId ++;
                 	loggedInUsers.add(new User(userName, password, true,sessionId));
-                    return true;
+                	logInResponse = "200 " + Response.SUCCESS;
 
+                } else {
+                	logInResponse = "404 " + Response.DENIED;
                 }
                 break;
 		}
@@ -108,7 +113,8 @@ public class UserService {
 		e.printStackTrace();
 	}
 		
-		return false;
+		return logInResponse;
+		
 	}
 	
 	public void logOut(String userName) {

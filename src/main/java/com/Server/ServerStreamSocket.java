@@ -1,6 +1,10 @@
 package com.Server;
 
 import java.net.*;
+import java.util.Arrays;
+import java.util.List;
+
+import com.Users.UserService;
 
 import Requests.Request;
 
@@ -11,6 +15,10 @@ public class ServerStreamSocket extends Socket {
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
+	private String request;
+	private  List<String> receivedMessageSplit;
+	private UserService user = new UserService();
+	
 		
 	ServerStreamSocket(Socket socket) throws IOException {
 		this.socket = socket;
@@ -42,7 +50,11 @@ public class ServerStreamSocket extends Socket {
 	
 	public String receiveRequest() throws IOException {
 		// read a line from the data stream
-	    String request = input.readLine();
+	    request = input.readLine();	    
+	    receivedMessageSplit = Arrays.asList(request.split(","));
+	    String req = receivedMessageSplit.get(1);
+	    processRequest(Request.valueOf(req));
+	    System.out.print(req);
 		return request;
 	} // end message
 	
@@ -56,12 +68,17 @@ public class ServerStreamSocket extends Socket {
 		handleRequest(request);
 	}
 	
-	public void handleRequest(Request request) {
+	public void handleRequest(Request requestt) {
 		
-		switch (request) {
+		switch (requestt) {
 		
-		case LOGIN:
-			System.out.print("Log in");
+		case LOGIN:	    
+		    String userName = receivedMessageSplit.get(2);
+		    String password= receivedMessageSplit.get(3);
+		    password = user.encryptPassword(password, 2);
+		    System.out.print(user.logIn(userName, password)+ "\n");
+			user.addUserToListOfUsers(userName, password);
+			user.getUsersAdd();
 			break;
 		case LOGOFF:
 			System.out.print("Log off");
@@ -72,7 +89,12 @@ public class ServerStreamSocket extends Socket {
 		case DOWNLOAD:
 			System.out.println("Download");
 			break;
-		
+		case SIGNUP:
+		    userName = receivedMessageSplit.get(2);
+		    password= receivedMessageSplit.get(3);
+		    password = user.encryptPassword(password, 2);
+		    user.createUser(userName, password);
+			break;
 		default:
 			System.out.print("Error");
 		}

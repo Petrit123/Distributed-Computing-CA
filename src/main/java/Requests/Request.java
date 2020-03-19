@@ -4,6 +4,7 @@ public enum Request {
 	
 	LOGIN,
 	LOGOFF,
+	SIGNUP,
 	UPLOAD,
 	DOWNLOAD,
 	EXIT,

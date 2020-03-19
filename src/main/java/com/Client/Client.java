@@ -133,5 +133,24 @@ public static String sendUserLogInDetails(String responseCode, Request request, 
 	
 	return serverResponse;
 }
+
+public static String sendUserRegistrationDetails(String responseCode, Request request, String userName, String password) {
+	
+	String createUserRequest = responseCode + "," + request + "," + userName + "," + password;
+	
+	System.out.println(createUserRequest);
+	
+	String serverResponse = "";
+	
+	try {
+		serverResponse = helper.getEcho(createUserRequest);
+	}  catch (SocketException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	
+	return serverResponse;
+}
       
 } 
