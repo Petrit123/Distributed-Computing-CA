@@ -21,7 +21,7 @@ public class ServerThread implements Runnable {
 		try {
 			while (sessionStarted) {
 				request = myDataSocket.receiveRequest();
-				System.out.println("Request received: " + request);				
+				//System.out.println("Request received: " + request);				
 				if((request.trim()).equals(MESSAGE_TO_END_CONNECTION)) {
 					// Session over; close the data socket.
 					System.out.println("Session over.");
@@ -32,6 +32,7 @@ public class ServerThread implements Runnable {
 					// Now send the echo to the requester
 
 					myDataSocket.sendRequest(request);
+					//myDataSocket.sendResponse();
 				} 
 			} 
 		} 

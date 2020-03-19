@@ -118,7 +118,7 @@ public static String sendUserLogInDetails(String responseCode, Request request, 
 	
 	String userLogInRequest = responseCode + "," + request + "," +   userName + "," + password;
 	
-	System.out.println(userLogInRequest);
+	//System.out.println(userLogInRequest);
 	
 	String serverResponse = "";
 	try {
@@ -136,7 +136,7 @@ public static String sendUserRegistrationDetails(String responseCode, Request re
 	
 	String createUserRequest = responseCode + "," + request + "," + userName + "," + password;
 	
-	System.out.println(createUserRequest);
+	//System.out.println(createUserRequest);
 	
 	String serverResponse = "";
 	

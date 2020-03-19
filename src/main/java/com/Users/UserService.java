@@ -28,20 +28,26 @@ public class UserService {
 	private final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
 	private int sessionId = 0;
 	
-	public void createUser(String userName, String password) {
-		
+	public String createUser(String userName, String password) {
+		String serverResponse = "";
 		try {
-		isValidUserName(userName);
-		user.setUserName(userName);
-        user.setPassWord(encryptPassword(password, 2));
-        saveUserInfo(userName, password);
-		users.add(user);
-		System.out.println("Successfully registered user " + userName);
+		if (isValidUserName(userName)) {
+			serverResponse = "301 " + Response.FAILED;
+		} else {
+			user.setUserName(userName);
+	        user.setPassWord(encryptPassword(password, 2));
+	        saveUserInfo(userName, password);
+			users.add(user);
+			System.out.println("Successfully registered user " + userName);
+			serverResponse = "302 " + Response.SUCCESS;
+		}
 		} catch (IOException ex) {
 			System.out.println("Error in creating user");
 			ex.printStackTrace();
 
 		}
+		
+		return serverResponse;
 	}
 	
 	public void addUserToListOfUsers(String userName, String password) {
@@ -54,10 +60,10 @@ public class UserService {
 		
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt", true), StandardCharsets.UTF_8));
-			 writer.newLine();
 			 writer.append(userName + ": ").append(encryptPassword(password, 2));
+			 writer.newLine();
 			 //writer.append(encryptPassword(password, 2));
-			 //writer.close();
+			 writer.close();
 			 System.out.println("Successfully saved to file");
 		}  catch (FileNotFoundException e) {
 			System.out.println("Error writing to file ");
@@ -66,20 +72,23 @@ public class UserService {
 		
  }
 	
-	public String isValidUserName(String userName) {
+	public boolean isValidUserName(String userName) {
 		
-		String validUserName = userName;
+		boolean isValidName = false;
 		
 		try {
 		BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
 		String existingUserName = br.readLine();
 		while (existingUserName != null) {
 			if (userName.equalsIgnoreCase(existingUserName.substring(0, existingUserName.indexOf(":")))) {
-				System.out.println("Username already exists... \n Please enter another username");
-				validUserName = READER.readLine();
+				System.out.println("Username already exists... \nPlease enter another username");
+				isValidName = false;
+				break;
+			} else {
+				isValidName = true;
 				break;
 			}
-			break;
+
 		}
 		br.close();
 		} catch (IOException e) {
@@ -87,7 +96,7 @@ public class UserService {
 			e.printStackTrace();
 		}
 		
-		return validUserName;
+		return isValidName;
 	}
 	
 	public String logIn(String userName, String password) {

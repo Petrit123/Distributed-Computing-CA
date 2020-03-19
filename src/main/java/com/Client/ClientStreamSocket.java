@@ -42,6 +42,7 @@ public class ClientStreamSocket {
 	public String receiveRequest() throws IOException {
 		// read a line from the data stream
 		String request = input.readLine();
+		System.out.print(request);
 		return request;
 	} // end message
 	

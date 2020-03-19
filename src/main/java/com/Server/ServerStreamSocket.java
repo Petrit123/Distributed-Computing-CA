@@ -17,6 +17,7 @@ public class ServerStreamSocket extends Socket {
 	private String request;
 	private  List<String> receivedMessageSplit;
 	private UserService user = new UserService();
+	private String response = "";
 	
 		
 	ServerStreamSocket(Socket socket) throws IOException {
@@ -35,7 +36,9 @@ public class ServerStreamSocket extends Socket {
 	}
 	
 	public void sendRequest(String request) throws IOException {
-		output.print(request + "\n");
+		
+		System.out.print("Server sending response " + request);
+		output.print("Server  response " + request + "\n");
 		/* The ensuing flush method call is necessary for the data to
 		 * be written to the socket data stream before the
 		 * socket is closed
@@ -45,16 +48,17 @@ public class ServerStreamSocket extends Socket {
 		// end message
 	}
 	
-
 	
 	public String receiveRequest() throws IOException {
 		// read a line from the data stream
+		String blah = "";
 	    request = input.readLine();	    
 	    receivedMessageSplit = Arrays.asList(request.split(","));
 	    String req = receivedMessageSplit.get(1);
-	    processRequest(Request.valueOf(req));
+	    blah = processRequest(Request.valueOf(req));
 	    System.out.print(req);
-		return request;
+	    System.out.println(request);
+		return blah;
 	} // end message
 	
 
@@ -63,19 +67,20 @@ public class ServerStreamSocket extends Socket {
 		socket.close();
 	}
 		
-	public void processRequest(Request request) {
-		handleRequest(request);
+	public String processRequest(Request request) throws IOException {
+		 return handleRequest(request);
 	}
 	
-	public void handleRequest(Request requestt) {
-		
+	public String handleRequest(Request requestt) throws IOException {
+		 String response = "";
 		switch (requestt) {
 		
 		case LOGIN:	    
 		    String userName = receivedMessageSplit.get(2);
 		    String password= receivedMessageSplit.get(3);
 		    password = user.encryptPassword(password, 2);
-		    System.out.print(user.logIn(userName, password)+ "\n");
+		    response = user.logIn(userName, password)+ "\n";
+		    //sendRequest(response);
 			user.addUserToListOfUsers(userName, password);
 			user.getUsersAdd();
 			break;
@@ -92,11 +97,15 @@ public class ServerStreamSocket extends Socket {
 		    userName = receivedMessageSplit.get(2);
 		    password= receivedMessageSplit.get(3);
 		    password = user.encryptPassword(password, 2);
-		    user.createUser(userName, password);
+		    response = user.createUser(userName, password);
+		    sendRequest(response);
 			break;
 		default:
 			System.out.print("Error");
 		}
+		
+		return response;
+
 	}
 	
 } // end class
