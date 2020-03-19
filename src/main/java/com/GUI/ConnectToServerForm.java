@@ -125,15 +125,16 @@ public class ConnectToServerForm extends JFrame {
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				LoginForm lf = new LoginForm();
 				hostName = txtHostName.getText().toString();
 				portNumber = txtPortNumber.getText().toString();
 				Client c = new Client();
-				c.startClient(hostName, portNumber);
+				LoginForm lf = new LoginForm();
 				lf.setVisible(true);
 				lf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setVisible(false);
 				dispose();
+				c.startClient(hostName, portNumber);
+
 			}
 		});
 		lblNewLabel.setForeground(Color.WHITE);

@@ -27,8 +27,8 @@ public class ClientStreamSocket {
 		output = new PrintWriter(new OutputStreamWriter(outStream));
 	}
 	
-	public void sendMessage(String message) throws IOException {
-		output.print(message + "\n");
+	public void sendRequest(String request) throws IOException {
+		output.print(request + "\n");
 		/* The ensuing flush method call is necessary for the data to
 		 * be written to the socket data stream before the
 		 * socket is closed
@@ -38,16 +38,11 @@ public class ClientStreamSocket {
 		// end message
 	}
 	
-	public Request receiveRequest() throws IOException {
-		Request request = Request.DOWNLOAD;
-		return request;
-	}
-
-
-	public String receiveMessage() throws IOException {
+	
+	public String receiveRequest() throws IOException {
 		// read a line from the data stream
-		String message = input.readLine();
-		return message;
+		String request = input.readLine();
+		return request;
 	} // end message
 	
 	public void close() throws IOException {

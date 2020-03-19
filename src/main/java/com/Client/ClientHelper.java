@@ -38,18 +38,24 @@ public class ClientHelper {
 
 	   
 	   
-	   public String getEcho(String message) throws SocketException, IOException {     
-	      String echo = "";    
-	      mySocket.sendMessage( message);
+	   public String getEcho(String request) throws SocketException, IOException {     
+	      String echo;    
+	      mySocket.sendRequest(request);
 		   // now receive the echo
-	      echo = mySocket.receiveMessage();
+	      echo = mySocket.receiveRequest();
 	      return echo;
+	   }
+	   
+	   
+	   public Request retrieveRequest(Request request) {
+		   return request;
 	   }
 
 
 
+
 	   public void terminateSession() throws SocketException, IOException {
-	      mySocket.sendMessage(MESSAGE_TO_END_CONNECTION);
+	      mySocket.sendRequest(MESSAGE_TO_END_CONNECTION);
 	      mySocket.close();
 	   } 
 	} 

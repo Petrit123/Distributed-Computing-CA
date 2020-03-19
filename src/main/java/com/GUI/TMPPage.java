@@ -78,7 +78,7 @@ public class TMPPage extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Client.startClientApplication(textArea, textField.getText().toString());
+				//Client.startClientApplication(textArea, textField.getText().toString());
 			}
 		});
 		

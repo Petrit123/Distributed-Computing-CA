@@ -17,15 +17,12 @@ public class ServerThread implements Runnable {
 	
 	public void run() {
 		boolean sessionStarted = true;
-		String message;
-		Request request;
+		String request;
 		try {
-			request = myDataSocket.receiveRequest();
-			myDataSocket.processRequest(request);
 			while (sessionStarted) {
-				message = myDataSocket.receiveMessage();
-				System.out.println("Message received: " + message);				
-				if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)) {
+				request = myDataSocket.receiveRequest();
+				System.out.println("Request received: " + request);				
+				if((request.trim()).equals(MESSAGE_TO_END_CONNECTION)) {
 					// Session over; close the data socket.
 					System.out.println("Session over.");
 					myDataSocket.close();
@@ -34,7 +31,7 @@ public class ServerThread implements Runnable {
 				else {
 					// Now send the echo to the requester
 
-					myDataSocket.sendMessage(message);
+					myDataSocket.sendRequest(request);
 				} 
 			} 
 		} 

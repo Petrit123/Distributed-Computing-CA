@@ -4,9 +4,7 @@ import java.io.*;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
+import javax.swing.JFrame;
 import com.TMP.TMPService;
 import com.Users.User;
 import com.Users.UserService;
@@ -24,11 +22,13 @@ public class Client {
       public int sessionId = 0;
       public User user;
       public static ClientHelper helper;
+      public static String clientRequest = "";
       
       
       public void startClient(String hostName, String portNumber) {
          try {
 			helper = new ClientHelper(getHostName(hostName), getPortNumber(portNumber));
+			//startClientApplication();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,30 +41,32 @@ public class Client {
 		}         
      }
       
-      public static void startClientApplication(JTextArea textArea, String message) {
+      public void startClientApplication() {
      	 try {
-     		 
           boolean sessionStarted = true;
           
+          String request;
           String echo;
-          while (sessionStarted) {
-             //tmp.uploadMessage(user.getUserName(), message);
-             if ((message.trim()).equalsIgnoreCase(MESSAGE_TO_END_CONNECTION)){
+          if(sessionStarted) {
+        	 request = clientRequest;
+             if ((request.trim()).equals(MESSAGE_TO_END_CONNECTION)){
                 sessionStarted = false;
                 helper.terminateSession();
                 System.out.print("Session terminated");
              }
-             else if (message != "") {;
-                echo = helper.getEcho(message);
-                textArea.append("\n Message sent: " + message + "\n Server Response: " + echo);
+             else if (request != ""){
+                echo = helper.getEcho(request);
                 System.out.println(echo);
              }
+             clientRequest = "";
            } 
        }  
        catch (Exception ex) {
           ex.printStackTrace( );
        } 
       }
+      
+
 
       
       private String getHostName(String hostName) {
@@ -112,6 +114,24 @@ public void displayHomeScreen() {
 		e.printStackTrace();
 	}
 
+}
+
+public static String sendUserLogInDetails(String responseCode, Request request, String userName, String password) {
+	
+	String userLogInRequest = responseCode + "," + request + "," +   userName + "," + password;
+	
+	System.out.println(userLogInRequest);
+	
+	String serverResponse = "";
+	try {
+		serverResponse = helper.getEcho(userLogInRequest);
+	} catch (SocketException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	
+	return serverResponse;
 }
       
 } 
