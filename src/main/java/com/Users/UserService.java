@@ -11,11 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import Responses.Response;
+import com.Responses.Response;
 
 public class UserService {
 	
@@ -52,10 +53,11 @@ public class UserService {
 	public void saveUserInfo(String userName, String password) throws IOException {
 		
 		try {
-			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt")));
-			 writer.append(userName + ": ");
-			 writer.append(encryptPassword(password, 2));
-			 writer.close();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt", true), StandardCharsets.UTF_8));
+			 writer.newLine();
+			 writer.append(userName + ": ").append(encryptPassword(password, 2));
+			 //writer.append(encryptPassword(password, 2));
+			 //writer.close();
 			 System.out.println("Successfully saved to file");
 		}  catch (FileNotFoundException e) {
 			System.out.println("Error writing to file ");

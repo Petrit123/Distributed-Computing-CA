@@ -1,4 +1,4 @@
-package Responses;
+package com.Responses;
 
 public enum Response {
 	

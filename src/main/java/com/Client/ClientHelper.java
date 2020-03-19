@@ -4,7 +4,7 @@ import java.net.*;
 
 import javax.swing.JOptionPane;
 
-import Requests.Request;
+import com.Requests.Request;
 
 import java.io.*;;
 

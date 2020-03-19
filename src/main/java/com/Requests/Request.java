@@ -1,4 +1,4 @@
-package Requests;
+package com.Requests;
 
 public enum Request {
 	

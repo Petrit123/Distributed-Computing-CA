@@ -2,7 +2,7 @@ package com.Client;
 
 import java.net.*;
 
-import Requests.Request;
+import com.Requests.Request;
 
 import java.io.*;
 

@@ -8,9 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.Client.Client;
+import com.Requests.Request;
 import com.Users.UserService;
-
-import Requests.Request;
 
 import java.awt.Color;
 import javax.swing.JLabel;

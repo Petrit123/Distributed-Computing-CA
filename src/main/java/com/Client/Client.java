@@ -8,10 +8,8 @@ import javax.swing.JFrame;
 import com.TMP.TMPService;
 import com.Users.User;
 import com.Users.UserService;
-
-import Requests.Request;
-
 import com.GUI.*;
+import com.Requests.Request;
 
 public class Client {
       private static final String MESSAGE_TO_END_CONNECTION = "Exit";
