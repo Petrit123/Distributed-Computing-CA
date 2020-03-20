@@ -20,7 +20,7 @@ import com.Responses.Response;
 
 public class UserService {
 	
-	private File file = new File("users.txt");
+	private File file = new File("Users.txt");
 	private User user = new User();
 	private User userWitSessionId;
 	private List<User> users = new ArrayList<User>();
@@ -59,8 +59,13 @@ public class UserService {
 	public void saveUserInfo(String userName, String password) throws IOException {
 		
 		try {
+			
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt", true), StandardCharsets.UTF_8));
-			 writer.append(userName + ": ").append(encryptPassword(password, 2));
+			 writer.append("\n" + userName + ": ").append(encryptPassword(password, 2));
 			 writer.newLine();
 			 //writer.append(encryptPassword(password, 2));
 			 writer.close();
@@ -100,23 +105,21 @@ public class UserService {
 	}
 	
 	public String logIn(String userName, String password) {
-		String logInResponse = ""; 
+		String logInResponse = "404 DENIED";
 		try {
 			password = encryptPassword(password, 2);
 			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
-			String userNameInFile = br.readLine();
 			//System.out.println(userNameInFile.substring(userNameInFile.indexOf(':') + 2));
-			while (userNameInFile != null) {               	
+			String userNameInFile;
+			while ((userNameInFile = br.readLine()) != null) {
                 if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
                 	System.out.println("Credentials are valid");
                 	sessionId ++;
-                	loggedInUsers.add(new User(userName, password, true,sessionId));
-                	logInResponse = "200 " + Response.SUCCESS;
+                	//loggedInUsers.add(new User(userName, password, true,sessionId));
+                	logInResponse = "200 SUCCESS";
+                	//break;
 
-                } else {
-                	logInResponse = "404 " + Response.DENIED;
-                }
-                break;
+                } 
 		}
 			br.close();
 	} catch (IOException e) {

@@ -39,20 +39,12 @@ public class ClientHelper {
 	   
 	   
 	   public String getEcho(String request) throws SocketException, IOException {     
-	      String echo;    
+	      String echo = "";
 	      mySocket.sendRequest(request);
 		   // now receive the echo
 	      echo = mySocket.receiveRequest();
 	      return echo;
 	   }
-	   
-	   
-	   public Request retrieveRequest(Request request) {
-		   return request;
-	   }
-
-
-
 
 	   public void terminateSession() throws SocketException, IOException {
 	      mySocket.sendRequest(MESSAGE_TO_END_CONNECTION);

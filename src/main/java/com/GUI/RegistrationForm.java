@@ -13,6 +13,8 @@ import com.Users.UserService;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -130,12 +132,38 @@ public class RegistrationForm extends JFrame {
 		btnCreate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String userName = textField.getText();
-				String password = passwordField.getText();
-				//UserService user = new UserService();
-				//password = user.encryptPassword(password, 2);
-				//user.createUser(userName, password);
-				Client.sendUserRegistrationDetails("101", Request.SIGNUP, userName, password);
+				if (!passwordField.getText().equals(passwordField_1.getText())) {
+					JOptionPane.showMessageDialog(null, "Passwords do not match!!", "Error",JOptionPane.ERROR_MESSAGE);		
+					passwordField.setText("");
+					passwordField_1.setText("");
+				}
+				else if (textField.getText().equals("") || passwordField.getText().equals("") ) {
+					JOptionPane.showMessageDialog(null, "Blank field", "Error",JOptionPane.ERROR_MESSAGE);
+				} else {
+					String userName = textField.getText();
+					String password = passwordField.getText();
+					//UserService user = new UserService();
+					//password = user.encryptPassword(password, 2);
+					//user.createUser(userName, password);
+					String serverResponse = Client.sendUserRegistrationDetails("101", Request.SIGNUP, userName, password);;
+					
+					if (Client.isRegistrationRequestSuccessful(serverResponse)) {
+						JOptionPane.showMessageDialog(null, "User " + userName + " successfully created", "Success", JOptionPane.INFORMATION_MESSAGE);
+						LoginForm lf = new LoginForm();
+						lf.setVisible(true);
+						lf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+						setVisible(false);
+						dispose();
+
+					} else if (!Client.isRegistrationRequestSuccessful(serverResponse)) {
+						JOptionPane.showMessageDialog(null, "Username is already taken", "Failure", JOptionPane.ERROR_MESSAGE);
+						textField.setText("");
+						passwordField.setText("");
+						passwordField_1.setText("");
+					}
+				}
+				
+
 			}			
 		});
 		panel_1.add(btnCreate);

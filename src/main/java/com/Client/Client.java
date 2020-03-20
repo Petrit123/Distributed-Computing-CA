@@ -17,7 +17,7 @@ public class Client {
       public BufferedReader br = new BufferedReader(is);
       public UserService s = new UserService();
       public TMPService tmp = new TMPService();
-      public int sessionId = 0;
+      public static int sessionId = 0;
       public User user;
       public static ClientHelper helper;
       public static String clientRequest = "";
@@ -114,7 +114,7 @@ public void displayHomeScreen() {
 
 }
 
-public static String sendUserLogInDetails(String responseCode, Request request, String userName, String password) {
+public static String sendUserLogInDetails(String responseCode, String request, String userName, String password) {
 	
 	String userLogInRequest = responseCode + "," + request + "," +   userName + "," + password;
 	
@@ -132,6 +132,29 @@ public static String sendUserLogInDetails(String responseCode, Request request, 
 	
 	return serverResponse;
 }
+
+public static boolean isLoginRequestSuccessful(String serverResponse) {
+	boolean isLoginRequestSuccessful = false;
+	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("200")) {
+		isLoginRequestSuccessful = true;
+	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("404")) {
+		isLoginRequestSuccessful = false;
+	}
+	
+	return isLoginRequestSuccessful;
+}
+
+public static boolean isRegistrationRequestSuccessful(String serverResponse) {
+	boolean isLoginRequestSuccessful = false;
+	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("302")) {
+		isLoginRequestSuccessful = true;
+	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("301")) {
+		isLoginRequestSuccessful = false;
+	}
+	
+	return isLoginRequestSuccessful;
+}
+
 
 public static String sendUserRegistrationDetails(String responseCode, Request request, String userName, String password) {
 	

@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -30,7 +33,6 @@ public class LoginForm extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	private String serverResponse = "";
 
 	/**
 	 * Launch the application.
@@ -132,23 +134,33 @@ public class LoginForm extends JFrame {
 		btnNewButton.setForeground(new Color(240, 248, 255));
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(251, 142, 114, 39);
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String userName = textField.getText();
-				String password = passwordField.getText();
-				serverResponse = Client.sendUserLogInDetails("100", Request.LOGIN, userName, password);
-				if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("200")) {
-					TMPPage frame = new TMPPage();
-					//frame.displayUserDetails(userName, user.getSessionId());
-					frame.setVisible(true);
-					dispose();
-				} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("404")) {
-					JOptionPane.showMessageDialog(null, "Username or password is incorrect, please try again", "Failure", JOptionPane.ERROR_MESSAGE);
-					textField.setText("");
-					passwordField.setText("");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (textField.getText().equals("") || passwordField.getText().equals("") ) {
+					JOptionPane.showMessageDialog(null, "Blank field", "Error",JOptionPane.ERROR_MESSAGE);
+				} else {
+					String userName = textField.getText();
+					String password = passwordField.getText();
+					String serverResponse = Client.sendUserLogInDetails("100", "LOGIN", userName, password);
+					
+					if (Client.isLoginRequestSuccessful(serverResponse)) {
+						Client.sessionId ++;
+						TMPPage frame = new TMPPage();
+						frame.displayUserDetails(userName, Client.sessionId);
+						//frame.displayUserDetails(userName, user.getSessionId());
+						frame.setVisible(true);
+						setVisible(false);
+						dispose();
+					} else if (!Client.isLoginRequestSuccessful(serverResponse)) {
+						JOptionPane.showMessageDialog(null, "Username or password is incorrect, please try again", "Failure", JOptionPane.ERROR_MESSAGE);
+						textField.setText("");
+						passwordField.setText("");
+					}
 				}
-			}			
+
+				
+			}
 		});
 		panel_1.add(btnNewButton);
 		

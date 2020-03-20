@@ -28,6 +28,8 @@ public class ClientStreamSocket {
 	}
 	
 	public void sendRequest(String request) throws IOException {
+		
+		System.out.print("Client sent request " + request + "\n");
 		output.print(request + "\n");
 		/* The ensuing flush method call is necessary for the data to
 		 * be written to the socket data stream before the
@@ -42,7 +44,7 @@ public class ClientStreamSocket {
 	public String receiveRequest() throws IOException {
 		// read a line from the data stream
 		String request = input.readLine();
-		System.out.print(request);
+		System.out.print("Client received " + request);
 		return request;
 	} // end message
 	
