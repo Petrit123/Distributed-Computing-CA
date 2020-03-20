@@ -13,6 +13,8 @@ import com.Users.UserService;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -28,6 +30,7 @@ public class LoginForm extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	private String serverResponse = "";
 
 	/**
 	 * Launch the application.
@@ -134,11 +137,17 @@ public class LoginForm extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				String userName = textField.getText();
 				String password = passwordField.getText();
-				Client.sendUserLogInDetails("100", Request.LOGIN, userName, password);
-				//TMPPage frame = new TMPPage();
-				//frame.displayUserDetails(userName, user.getSessionId());
-				//frame.setVisible(true);
-				//dispose();
+				serverResponse = Client.sendUserLogInDetails("100", Request.LOGIN, userName, password);
+				if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("200")) {
+					TMPPage frame = new TMPPage();
+					//frame.displayUserDetails(userName, user.getSessionId());
+					frame.setVisible(true);
+					dispose();
+				} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("404")) {
+					JOptionPane.showMessageDialog(null, "Username or password is incorrect, please try again", "Failure", JOptionPane.ERROR_MESSAGE);
+					textField.setText("");
+					passwordField.setText("");
+				}
 			}			
 		});
 		panel_1.add(btnNewButton);

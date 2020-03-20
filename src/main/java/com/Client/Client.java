@@ -123,6 +123,7 @@ public static String sendUserLogInDetails(String responseCode, Request request, 
 	String serverResponse = "";
 	try {
 		serverResponse = helper.getEcho(userLogInRequest);
+
 	} catch (SocketException e) {
 		e.printStackTrace();
 	} catch (IOException e) {

@@ -37,8 +37,8 @@ public class ServerStreamSocket extends Socket {
 	
 	public void sendRequest(String request) throws IOException {
 		
-		System.out.print("Server sending response " + request);
-		output.print("Server  response " + request + "\n");
+		//System.out.print("Server response " + request);
+		output.print(request + "\n");
 		/* The ensuing flush method call is necessary for the data to
 		 * be written to the socket data stream before the
 		 * socket is closed
@@ -51,14 +51,14 @@ public class ServerStreamSocket extends Socket {
 	
 	public String receiveRequest() throws IOException {
 		// read a line from the data stream
-		String blah = "";
+		String response = "";
 	    request = input.readLine();	    
 	    receivedMessageSplit = Arrays.asList(request.split(","));
 	    String req = receivedMessageSplit.get(1);
-	    blah = processRequest(Request.valueOf(req));
-	    System.out.print(req);
-	    System.out.println(request);
-		return blah;
+	    response = processRequest(Request.valueOf(req));
+//	    System.out.print(req);
+//	    System.out.println(request);
+		return response;
 	} // end message
 	
 
@@ -82,7 +82,6 @@ public class ServerStreamSocket extends Socket {
 		    response = user.logIn(userName, password)+ "\n";
 		    //sendRequest(response);
 			user.addUserToListOfUsers(userName, password);
-			user.getUsersAdd();
 			break;
 		case LOGOFF:
 			System.out.print("Log off");

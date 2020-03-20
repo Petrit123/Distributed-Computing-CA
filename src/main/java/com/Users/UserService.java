@@ -105,7 +105,7 @@ public class UserService {
 			password = encryptPassword(password, 2);
 			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
 			String userNameInFile = br.readLine();
-			System.out.println(userNameInFile.substring(userNameInFile.indexOf(':') + 2));
+			//System.out.println(userNameInFile.substring(userNameInFile.indexOf(':') + 2));
 			while (userNameInFile != null) {               	
                 if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
                 	System.out.println("Credentials are valid");
@@ -198,13 +198,7 @@ public class UserService {
 		return userWitSessionId;
 	}
 	
-	public void getUsersAdd() {
-		
-		for (User users: users) {
-			System.out.print(users.getUserName());
-			System.out.print(users.getPassWord());
-		}
-	}
+
 	
 	public int getSessionId() {
 		return sessionId;
