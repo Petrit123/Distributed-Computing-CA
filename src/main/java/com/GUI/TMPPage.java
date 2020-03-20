@@ -22,6 +22,7 @@ public class TMPPage extends JFrame {
 	private JLabel lblUser;
 	private JLabel lblSessionId;
 	public JTextField textField;
+	public String userName = "";
 
 	/**
 	 * Launch the application.
@@ -78,7 +79,8 @@ public class TMPPage extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//Client.startClientApplication(textArea, textField.getText().toString());
+				String message = Client.sendUserTMPMessage("700", "UPLOAD", userName, textField.getText());
+				textArea.append("\n" + message);
 			}
 		});
 		
@@ -88,5 +90,6 @@ public class TMPPage extends JFrame {
 	public void displayUserDetails(String userName, int sessionId) {
 		lblUser.setText("User: " + userName);
 		lblSessionId.setText("SessionId: " + sessionId);
+		this.userName = userName;
 	}
 }

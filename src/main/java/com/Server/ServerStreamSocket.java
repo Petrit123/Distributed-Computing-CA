@@ -16,10 +16,10 @@ public class ServerStreamSocket extends Socket {
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
-	private String request;
 	private  List<String> receivedMessageSplit;
 	private int sessionId = 0;
 	private File file = new File("Users.txt");
+	private static final int MESSAGE_LIMIT = 6;
 	
 		
 	ServerStreamSocket(Socket socket) throws IOException {
@@ -55,8 +55,8 @@ public class ServerStreamSocket extends Socket {
 		// read a line from the data stream
 	    String request = input.readLine();	    
 	    receivedMessageSplit = Arrays.asList(request.split(","));
-	    String req = receivedMessageSplit.get(1);
-	    String response = handleRequest("101");
+	    String req = receivedMessageSplit.get(0);
+	    String response = handleRequest(req);
 	    System.out.print("Server received " + req + "\n");
 		return response;
 	} // end message
@@ -84,9 +84,10 @@ public class ServerStreamSocket extends Socket {
 //		case "LOGOFF":
 //			System.out.print("Log off");
 //			break;
-//		case "UPLOAD":
-//			System.out.println("Upload");
-//			break;
+		case "700":
+		    userName = receivedMessageSplit.get(2);
+		    String message= receivedMessageSplit.get(3);
+		    return uploadMessage(userName, message);
 //		case "DOWNLOAD":
 //			System.out.println("Download");
 //			break;
@@ -197,6 +198,32 @@ public class ServerStreamSocket extends Socket {
 	      }
 		
  }
+	
+	public String uploadMessage(String userName, String message) {
+		
+		try {
+			
+			File userNameFile = new File(userName);
+			
+			if (!userNameFile.exists()) {
+				userNameFile.mkdir();
+			}
+			
+			if (message.length() > MESSAGE_LIMIT) {
+				message = message.substring(0, MESSAGE_LIMIT);
+			}			
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userName + "/" + userName + "Messages.txt", true), StandardCharsets.UTF_8));
+			bw.append(message);
+			bw.newLine();
+			bw.close();
+		} catch (IOException e) {
+			
+			System.out.print("Error in uploading message");
+			e.printStackTrace();
+		}
+		
+		return message;
+	}
 	
 	
 } // end class

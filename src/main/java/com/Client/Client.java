@@ -174,5 +174,37 @@ public static String sendUserRegistrationDetails(String responseCode, Request re
 	
 	return serverResponse;
 }
+
+public static String sendUserTMPMessage(String responseCode, String request, String userName, String message) {
+	
+	String sendUserTMPMessageRequest = responseCode + "," + request + "," + userName + "," + message;
+	
+	String serverResponse = "";
+	
+	try {
+		serverResponse = helper.getEcho(sendUserTMPMessageRequest);
+	} catch (SocketException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return serverResponse;
+	
+}
+
+public static boolean isTMPMessageSuccessfulySent(String serverResponse) {
+	boolean isTMPMessageSuccessfulySent = false;
+	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("702")) {
+		isTMPMessageSuccessfulySent = true;
+	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("701")) {
+		isTMPMessageSuccessfulySent = false;
+	}
+	
+	return isTMPMessageSuccessfulySent;
+}
+
       
 } 
