@@ -31,7 +31,7 @@ public class UserService {
 	public String createUser(String userName, String password) {
 		String serverResponse = "";
 		try {
-		if (isValidUserName(userName)) {
+		if (!isValidUserName(userName)) {
 			serverResponse = "301 " + Response.FAILED;
 		} else {
 			user.setUserName(userName);
