@@ -25,6 +25,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.Arrays;
+import java.util.List;
 import java.awt.Cursor;
 import javax.swing.JButton;
 
@@ -143,20 +145,24 @@ public class LoginForm extends JFrame {
 					String userName = textField.getText();
 					String password = passwordField.getText();
 					String serverResponse = Client.sendUserLogInDetails("100", "LOGIN", userName, password);
-					
+					List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(","));
+					Client.sessionId = receivedMessageSplit.get(1);
 					if (Client.isLoginRequestSuccessful(serverResponse)) {
-						Client.sessionId ++;
-						TMPPage frame = new TMPPage();
+						Twitter frame = new Twitter();
 						frame.displayUserDetails(userName, Client.sessionId);
 						//frame.displayUserDetails(userName, user.getSessionId());
 						frame.setVisible(true);
 						setVisible(false);
 						dispose();
+					} else if (!Client.checkIfUserIsLoggedIn(serverResponse)) {
+						JOptionPane.showMessageDialog(null, "User is already logged in", "Failure", JOptionPane.ERROR_MESSAGE);
+						textField.setText("");
+						passwordField.setText("");
 					} else if (!Client.isLoginRequestSuccessful(serverResponse)) {
 						JOptionPane.showMessageDialog(null, "Username or password is incorrect, please try again", "Failure", JOptionPane.ERROR_MESSAGE);
 						textField.setText("");
 						passwordField.setText("");
-					}
+					} 
 				}
 
 				

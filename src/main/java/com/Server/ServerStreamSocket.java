@@ -2,11 +2,14 @@ package com.Server;
 
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-
 import com.Requests.Request;
 import com.Responses.Response;
+import com.Users.User;
 import com.Users.UserService;
 
 import java.io.*;
@@ -17,9 +20,11 @@ public class ServerStreamSocket extends Socket {
 	private BufferedReader input;
 	private PrintWriter output;
 	private  List<String> receivedMessageSplit;
-	private int sessionId = 0;
+	public static int sessionId = 0;
+	public static boolean sessionStarted = false;
 	private File file = new File("Users.txt");
 	private static final int MESSAGE_LIMIT = 6;
+	public static List<User> loggedInUsers = new ArrayList<User>();
 	
 		
 	ServerStreamSocket(Socket socket) throws IOException {
@@ -56,6 +61,7 @@ public class ServerStreamSocket extends Socket {
 	    String request = input.readLine();	    
 	    receivedMessageSplit = Arrays.asList(request.split(","));
 	    String req = receivedMessageSplit.get(0);
+	    ServerThread.loggedInUsers.add(trackLoggedInUser(request));
 	    String response = handleRequest(req);
 	    System.out.print("Server received " + req + "\n");
 		return response;
@@ -74,10 +80,13 @@ public class ServerStreamSocket extends Socket {
 		case "100":	    
 		    String userName = receivedMessageSplit.get(2);
 		    String password= receivedMessageSplit.get(3);
-		    if (logIn(userName, password)) {
-		    	return "200 SUCCESS";
+		    String log = logIn(userName, password);
+		    if (log == "200") {
+		    	return "200 SUCCESS , " + sessionId;
+		    } else if (log == "202") {
+		    	return "202 ERROR , " + sessionId;
 		    } else {
-		    	return "404 DENIED";
+		    	return "404 DENIED , " + + sessionId;
 		    }
 		    //sendRequest(response);
 			//user.addUserToListOfUsers(userName, password);
@@ -110,20 +119,32 @@ public class ServerStreamSocket extends Socket {
 	
 
 	
-	public boolean logIn(String userName, String password) {
-		boolean logInResponse = false;
+	public String logIn(String userName, String password) {
+		String logInResponse = "";
+		User user = new User();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("Users.txt"));	
 			String userNameInFile;
-			while ((userNameInFile = br.readLine()) != null) {
-                if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
-                	System.out.println("Credentials are valid");
-                	sessionId ++;
-                	logInResponse = true;
-                	//break;
+			
+			for (User loggedInUser: ServerThread.loggedInUsers) {
+				if(loggedInUser.getUserName().trim().equals(userName) && loggedInUser.getSessionId() < sessionId) {
+					user = loggedInUser;
+				}
+			}
+			
+			if (user.isLoggedIn()) {
+				logInResponse = "202";
+			} else {
+				while ((userNameInFile = br.readLine()) != null) {
+	                if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
+	                	System.out.println("Credentials are valid");
+	                	logInResponse = "200";
+	                	//break;
 
-                } 
-		}
+	                } 
+			}
+			}
+			
 			br.close();
 	} catch (IOException e) {
 		System.out.println("Error in validating user log in details");
@@ -133,6 +154,26 @@ public class ServerStreamSocket extends Socket {
 		return logInResponse;
 		
 	}
+	
+	public static User trackLoggedInUser(String request) {
+		List<String> receivedMessageSplit = Arrays.asList(request.split(","));
+	    String requestCode = receivedMessageSplit.get(0);
+	    User user = new User();
+	    System.out.print("\n\n Received " + requestCode + "\n\n");
+	    if (requestCode.trim().equals("100")) {
+		    String userName = receivedMessageSplit.get(2);
+		    String password= receivedMessageSplit.get(3);
+	    	user.setUserName(userName);
+	    	user.setPassWord(password);
+	    	user.setLoggedIn(true);
+	    	user.setSessionId(sessionId);
+	    }
+	    
+	    return user;
+	    
+	    
+	}
+	
 	
 	public boolean createUser(String userName, String password) {
 		boolean isUserCreated = false;
@@ -201,6 +242,7 @@ public class ServerStreamSocket extends Socket {
 	
 	public String uploadMessage(String userName, String message) {
 		
+		   String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH.mm").format(new Date());		
 		try {
 			
 			File userNameFile = new File(userName);
@@ -216,8 +258,9 @@ public class ServerStreamSocket extends Socket {
 			bw.append(message);
 			bw.newLine();
 			bw.close();
+			message += ", Sent ," + timeStamp;
 		} catch (IOException e) {
-			
+			message += ", Failed ," + timeStamp;
 			System.out.print("Error in uploading message");
 			e.printStackTrace();
 		}

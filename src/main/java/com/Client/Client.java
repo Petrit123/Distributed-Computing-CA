@@ -17,7 +17,7 @@ public class Client {
       public BufferedReader br = new BufferedReader(is);
       public UserService s = new UserService();
       public TMPService tmp = new TMPService();
-      public static int sessionId = 0;
+      public static String sessionId = "";
       public User user;
       public static ClientHelper helper;
       public static String clientRequest = "";
@@ -134,10 +134,19 @@ public static String sendUserLogInDetails(String responseCode, String request, S
 }
 
 public static boolean isLoginRequestSuccessful(String serverResponse) {
-	boolean isLoginRequestSuccessful = false;
+	boolean isLoginRequestSuccessful = true;
 	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("200")) {
 		isLoginRequestSuccessful = true;
 	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("404")) {
+		isLoginRequestSuccessful = false;
+	}
+	
+	return isLoginRequestSuccessful;
+}
+
+public static boolean checkIfUserIsLoggedIn(String serverResponse) {
+	boolean isLoginRequestSuccessful = true;
+	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("202")) {
 		isLoginRequestSuccessful = false;
 	}
 	
