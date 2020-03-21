@@ -14,7 +14,6 @@ public class ServerThread implements Runnable {
 	private static final String MESSAGE_TO_END_CONNECTION = "Exit";
 	public ServerStreamSocket myDataSocket;
 	public static List<User> loggedInUsers = new ArrayList<User>();
-	
 	ServerThread(ServerStreamSocket myDataSocket) {
 		this.myDataSocket = myDataSocket;
 	}

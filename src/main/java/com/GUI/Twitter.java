@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.SystemColor;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Twitter extends JFrame {
 
@@ -72,6 +74,10 @@ public class Twitter extends JFrame {
 		contentPane.add(textField);
 		
 		JButton btnNewButton = new JButton("Upload");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnNewButton.setBounds(1189, 402, 114, 30);
 		contentPane.add(btnNewButton);
 	    appendToPane(textPane, "Welcome!  Enter a line to receive an echo from the server, or type exit to quit.", Color.BLUE);
