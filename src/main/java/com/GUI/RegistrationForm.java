@@ -8,7 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.Client.Client;
-import com.Requests.Request;
+import com.Protocol.Request;
+import com.Protocol.iRequest;
 import com.Users.UserService;
 
 import java.awt.Color;
@@ -142,10 +143,7 @@ public class RegistrationForm extends JFrame {
 				} else {
 					String userName = textField.getText();
 					String password = passwordField.getText();
-					//UserService user = new UserService();
-					//password = user.encryptPassword(password, 2);
-					//user.createUser(userName, password);
-					String serverResponse = Client.sendUserRegistrationDetails("101", Request.SIGNUP, userName, password);;
+					String serverResponse = Client.sendUserRegistrationDetails(iRequest.SIGNUP, userName, password);;
 					
 					if (Client.isRegistrationRequestSuccessful(serverResponse)) {
 						JOptionPane.showMessageDialog(null, "User " + userName + " successfully created", "Success", JOptionPane.INFORMATION_MESSAGE);

@@ -3,20 +3,21 @@ package com.Client;
 import java.io.*;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.swing.JFrame;
-import com.TMP.TMPService;
 import com.Users.User;
 import com.Users.UserService;
 import com.GUI.*;
-import com.Requests.Request;
+import com.Protocol.Request;
+import com.Protocol.iProtocolResponse;
+import com.Protocol.iRequest;
 
 public class Client {
       public static final String MESSAGE_TO_END_CONNECTION = "Exit";
       public InputStreamReader is = new InputStreamReader(System.in);
       public BufferedReader br = new BufferedReader(is);
       public UserService s = new UserService();
-      public TMPService tmp = new TMPService();
       public static String sessionId = "";
       public User user;
       public static ClientHelper helper;
@@ -26,7 +27,6 @@ public class Client {
       public void startClient(String hostName, String portNumber) {
          try {
 			helper = new ClientHelper(getHostName(hostName), getPortNumber(portNumber));
-			//startClientApplication();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,38 +38,9 @@ public class Client {
 			e.printStackTrace();
 		}         
      }
-      
-      public void startClientApplication() {
-     	 try {
-          boolean sessionStarted = true;
-          
-          String request;
-          String echo;
-          if(sessionStarted) {
-        	 request = clientRequest;
-             if ((request.trim()).equals(MESSAGE_TO_END_CONNECTION)){
-                sessionStarted = false;
-                helper.terminateSession();
-                System.out.print("Session terminated");
-             }
-             else if (request != ""){
-                echo = helper.getEcho(request);
-                System.out.println(echo);
-             }
-             clientRequest = "";
-           } 
-       }  
-       catch (Exception ex) {
-          ex.printStackTrace( );
-       } 
-      }
-      
 
-
-      
       private String getHostName(String hostName) {
     	  
-    		  //hostName = br.readLine();
     		  if (hostName.length() == 0) {
     			  hostName = "localhost";
     		  }
@@ -79,8 +50,6 @@ public class Client {
       
       private String getPortNumber(String portNumber) {
 
-
-        	  //portNumber = br.readLine();
               if (portNumber.length() == 0) {
                   portNumber = "5094";          // default port number  
               }
@@ -90,173 +59,188 @@ public class Client {
       }
       
       
-public void displayHomeScreen() {
-	HomeScreen window = new HomeScreen();
-	window.frame.setVisible(true);
-     ConnectToServerForm frame = new ConnectToServerForm();
-	
-	try {
-		for (int i = 0; i <= 100; i++) {
-			Thread.sleep(30);
-			window.lblNewLabel.setText(Integer.toString(i));
-			window.progressBar.setValue(i);
-			if (i == 100) {
-				window.frame.setVisible(false);
-				frame.setVisible(true);
-				
-				//break;
+	public void displayHomeScreen() {
+		HomeScreen window = new HomeScreen();
+		window.frame.setVisible(true);
+	     ConnectToServerForm frame = new ConnectToServerForm();
+		
+		try {
+			for (int i = 0; i <= 100; i++) {
+				Thread.sleep(30);
+				window.lblNewLabel.setText(Integer.toString(i));
+				window.progressBar.setValue(i);
+				if (i == 100) {
+					window.frame.setVisible(false);
+					frame.setVisible(true);
+				}
 			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
+	
+	public static String sendUserLogInDetails(String request, String userName, String password) {
+		
+		String userLogInRequest = request + "," +   userName + "," + password;	
+		
+		String serverResponse = "";
+		try {
+			serverResponse = helper.getEcho(userLogInRequest);
+	
+		} catch (SocketException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-
-}
-
-public static String sendUserLogInDetails(String responseCode, String request, String userName, String password) {
-	
-	String userLogInRequest = responseCode + "," + request + "," +   userName + "," + password;
-	
-	//System.out.println(userLogInRequest);
-	
-	String serverResponse = "";
-	try {
-		serverResponse = helper.getEcho(userLogInRequest);
-
-	} catch (SocketException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
+		return serverResponse;
 	}
 	
-	return serverResponse;
-}
-
-public static boolean isLoginRequestSuccessful(String serverResponse) {
-	boolean isLoginRequestSuccessful = true;
-	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("200")) {
-		isLoginRequestSuccessful = true;
-	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("404")) {
-		isLoginRequestSuccessful = false;
+	public static boolean isLoginRequestSuccessful(String serverResponse) {
+		List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(" "));
+		String responseCode = receivedMessageSplit.get(0);
+		String responseMessage = receivedMessageSplit.get(1);
+		String fullResponse = responseCode + " " + responseMessage;
+		boolean isLoginRequestSuccessful = true;
+		if (fullResponse.equals(iProtocolResponse.successfulLoginRequest)) {
+			isLoginRequestSuccessful = true;
+		} else if (fullResponse.equals(iProtocolResponse.invalidUserLoginDetailsRequest)) {
+			isLoginRequestSuccessful = false;
+		}
+		
+		return isLoginRequestSuccessful;
 	}
 	
-	return isLoginRequestSuccessful;
-}
-
-public static boolean checkIfUserIsLoggedIn(String serverResponse) {
-	boolean isLoginRequestSuccessful = true;
-	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("202")) {
-		isLoginRequestSuccessful = false;
+	public static boolean checkIfUserIsLoggedIn(String serverResponse) {
+		List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(" "));
+		String responseCode = receivedMessageSplit.get(0);
+		String responseMessage = receivedMessageSplit.get(1);
+		String fullResponse = responseCode + " " + responseMessage;
+		boolean isLoginRequestSuccessful = true;
+		if (fullResponse.equals(iProtocolResponse.loginRequestUserAlreadyLoggedIn)) {
+			isLoginRequestSuccessful = false;
+		}
+		
+		return isLoginRequestSuccessful;
 	}
 	
-	return isLoginRequestSuccessful;
-}
-
-public static boolean isRegistrationRequestSuccessful(String serverResponse) {
-	boolean isLoginRequestSuccessful = false;
-	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("302")) {
-		isLoginRequestSuccessful = true;
-	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("301")) {
-		isLoginRequestSuccessful = false;
+	
+	public static String sendUserRegistrationDetails(String request, String userName, String password) {
+		
+		String createUserRequest = request + "," + userName + "," + password;
+		
+		String serverResponse = "";
+		
+		try {
+			serverResponse = helper.getEcho(createUserRequest);
+		}  catch (SocketException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return serverResponse;
 	}
 	
-	return isLoginRequestSuccessful;
-}
-
-
-public static String sendUserRegistrationDetails(String responseCode, Request request, String userName, String password) {
-	
-	String createUserRequest = responseCode + "," + request + "," + userName + "," + password;
-	
-	//System.out.println(createUserRequest);
-	
-	String serverResponse = "";
-	
-	try {
-		serverResponse = helper.getEcho(createUserRequest);
-	}  catch (SocketException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
+	public static boolean isRegistrationRequestSuccessful(String serverResponse) {
+		boolean isLoginRequestSuccessful = false;
+		if (serverResponse.equals(iProtocolResponse.successfulSignUpRequest)) {
+			isLoginRequestSuccessful = true;
+		} else if (serverResponse.equals(iProtocolResponse.invalidUserNameSignUpRequest)) {
+			isLoginRequestSuccessful = false;
+		}
+		
+		return isLoginRequestSuccessful;
 	}
 	
-	return serverResponse;
-}
-
-public static String sendUserTMPMessage(String responseCode, String request, String userName, String message) {
 	
-	String sendUserTMPMessageRequest = responseCode + "," + request + "," + userName + "," + message;
-	
-	String serverResponse = "";
-	
-	try {
-		serverResponse = helper.getEcho(sendUserTMPMessageRequest);
-	} catch (SocketException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	public static String sendUserTMPMessage(String request, String userName, String message) {
+		
+		String sendUserTMPMessageRequest = request + "," + userName + "," + message;
+		
+		String serverResponse = "";
+		
+		try {
+			serverResponse = helper.getEcho(sendUserTMPMessageRequest);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return serverResponse;
+		
 	}
 	
-	return serverResponse;
-	
-}
-
-public static String sendDownloadRequest(String responseCode, String request, String userName) {
-	
-	String sendUserDownloadRequest = responseCode + "," + request + "," + userName;
-	
-	String serverResponse = "";
-	
-	try {
-		serverResponse = helper.getEcho(sendUserDownloadRequest);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	public static String sendDownloadRequest(String request, String userName) {
+		
+		String sendUserDownloadRequest = request + "," + userName;
+		
+		String serverResponse = "";
+		
+		try {
+			serverResponse = helper.getEcho(sendUserDownloadRequest);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return serverResponse;
 	}
 	
-	return serverResponse;
-}
-
-public static boolean isTMPMessageSuccessfulySent(String serverResponse) {
-	boolean isTMPMessageSuccessfulySent = false;
-	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("702")) {
-		isTMPMessageSuccessfulySent = true;
-	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("701")) {
-		isTMPMessageSuccessfulySent = false;
+	public static boolean isTMPMessageSuccessfulySent(String serverResponse) {
+		List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(" "));
+		String responseCode = receivedMessageSplit.get(0);
+		String responseMessage = receivedMessageSplit.get(1);
+		String fullResponse = responseCode + " " + responseMessage;
+		boolean isTMPMessageSuccessfulySent = false;
+		if (fullResponse.equals(iProtocolResponse.successFulUpload)) {
+			isTMPMessageSuccessfulySent = true;
+		} else if (fullResponse.equals(iProtocolResponse.failedUpload)) {
+			isTMPMessageSuccessfulySent = false;
+		}
+		
+		return isTMPMessageSuccessfulySent;
 	}
 	
-	return isTMPMessageSuccessfulySent;
-}
-
-public static boolean isTMPMessageDownloaded(String serverResponse) {
-	boolean isMessageDownloaded = false;
-	
-	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("601")) {
-		isMessageDownloaded = true;
-	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("602")) {
-		isMessageDownloaded = false;
+	public static boolean isTMPMessageDownloaded(String serverResponse) {
+		List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(" "));
+		String responseCode = receivedMessageSplit.get(0);
+		String responseMessage = receivedMessageSplit.get(1);
+		String fullResponse = responseCode + " " + responseMessage;
+		boolean isMessageDownloaded = false;
+		
+		if (fullResponse.equals(iProtocolResponse.succesFulDownload)) {
+			isMessageDownloaded = true;
+		} else if (fullResponse.equals(iProtocolResponse.failedDownload)) {
+			isMessageDownloaded = false;
+		}
+		
+		return isMessageDownloaded;
 	}
 	
-	return isMessageDownloaded;
-}
-
-public static void sendLogOffRequest(String responseCode, String request) {
-	String loggOfRequest = responseCode + "," + request;
-	
-	String serverResponse = "";
-	
-	try {
-		serverResponse = helper.getEcho(loggOfRequest);
-	} catch (SocketException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	public static String sendLogOffRequest(String request, String userName) {
+		String loggOfRequest = request + "," + userName;
+		
+		String serverResponse = "";
+		
+		try {
+			serverResponse = helper.getEcho(loggOfRequest);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return serverResponse;
 	}
-}
+	
+
       
 } 

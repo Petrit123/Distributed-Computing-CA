@@ -29,7 +29,7 @@ import java.awt.Cursor;
 
 public class ConnectToServerForm extends JFrame {
 
-	private Image serverIcon = new ImageIcon(ConnectToServerForm.class.getResource("/com/res/server.png")).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH);
+	private Image serverIcon = new ImageIcon(ConnectToServerForm.class.getResource("/com/resources/server.png")).getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH);
 	private JPanel contentPane;
 	private JTextField txtHostName;
 	private JTextField txtPortNumber;

@@ -8,7 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.Client.Client;
-import com.Requests.Request;
+import com.Protocol.Request;
+import com.Protocol.iRequest;
 import com.Users.UserService;
 
 import java.awt.Color;
@@ -144,17 +145,16 @@ public class LoginForm extends JFrame {
 				} else {
 					String userName = textField.getText();
 					String password = passwordField.getText();
-					String serverResponse = Client.sendUserLogInDetails("100", "LOGIN", userName, password);
-					List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(","));
-					Client.sessionId = receivedMessageSplit.get(1);
+					String serverResponse = Client.sendUserLogInDetails(iRequest.LOGIN , userName, password);
+					List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(" "));
+					Client.sessionId = receivedMessageSplit.get(2);
 					 if (!Client.checkIfUserIsLoggedIn(serverResponse)) {
 							JOptionPane.showMessageDialog(null, "User is already logged in", "Failure", JOptionPane.ERROR_MESSAGE);
 							textField.setText("");
 							passwordField.setText("");
 						} else if (Client.isLoginRequestSuccessful(serverResponse)) {
 						Twitter frame = new Twitter();
-						frame.displayUserDetails(userName, Client.sessionId);
-						//frame.displayUserDetails(userName, user.getSessionId());
+						frame.displayUserDetails(userName, Client.sessionId);	
 						frame.setVisible(true);
 						setVisible(false);
 						dispose();

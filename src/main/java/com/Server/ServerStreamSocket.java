@@ -8,14 +8,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
-import com.Client.Client;
-import com.Requests.Request;
-import com.Responses.Response;
+import com.Protocol.iProtocolResponse;
 import com.Users.User;
-import com.Users.UserService;
-
 import java.awt.Desktop;
 import java.io.*;
 
@@ -32,6 +26,8 @@ public class ServerStreamSocket extends Socket {
 	public static List<User> loggedInUsers = new ArrayList<User>();
 	private String downloadedMessages = "";
 	public static List<String> userMessages;
+	public String limitedMessage = "";
+	public boolean isMessagesSent = false;
 	
 		
 	ServerStreamSocket(Socket socket) throws IOException {
@@ -81,55 +77,55 @@ public class ServerStreamSocket extends Socket {
 	}
 		
 	
-	public String handleRequest(String requestt) throws IOException {
-		switch (requestt) {
+	public String handleRequest(String clientRequest) throws IOException {
+		switch (clientRequest) {
 		
-		case "100":	    
+		case "800":	    
 		    String userName = receivedMessageSplit.get(2);
 		    String password= receivedMessageSplit.get(3);
-		    String log = logIn(userName, password);
-		    if (log == "200") {
-		    	return "200 SUCCESS , " + sessionId;
-		    } else if (log == "202") {
-		    	return "202 ERROR , " + sessionId;
+		    String response = logIn(userName, password);
+		    if (response == iProtocolResponse.successfulLoginRequest) {
+		    	return iProtocolResponse.successfulLoginRequest + " " + sessionId;
+		    } else if (response == iProtocolResponse.loginRequestUserAlreadyLoggedIn) {
+		    	return iProtocolResponse.loginRequestUserAlreadyLoggedIn + " " + sessionId;
 		    } else {
-		    	return "404 DENIED , " + sessionId;
+		    	return iProtocolResponse.invalidUserLoginDetailsRequest + " " + sessionId;
 		    }
-		    //sendRequest(response);
-			//user.addUserToListOfUsers(userName, password);
-		case "900":
-			logOff();
-			return "GoodBye";
 		case "700":
+		    userName = receivedMessageSplit.get(2);
+		    password= receivedMessageSplit.get(3);
+		    if(createUser(userName, password)) {
+		    	return iProtocolResponse.successfulSignUpRequest;
+		    } else {
+		    	return iProtocolResponse.invalidUserNameSignUpRequest;
+		    }
+		case "600":
 		    userName = receivedMessageSplit.get(2);
 		    String message= receivedMessageSplit.get(3);
 		    String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH.mm").format(new Date());
 		    if (uploadMessageToArrayList(userName, message)) {
-		    	return message += ", Sent ," + timeStamp;
+		    	return iProtocolResponse.successFulUpload + "," + limitedMessage +  ", Sent ," + timeStamp;
 		    } else {
-		    	return message += ", Failed ," + timeStamp;
+		    	return limitedMessage += ", Failed ," + timeStamp;
 		    }
-		case "600":
+		case "500":
 			userName = receivedMessageSplit.get(2);
 			if (downloadMessage(userName)) {
-				return "601, " + downloadedMessages;
+				System.out.print("True");
+				return iProtocolResponse.succesFulDownload + " , " + downloadedMessages;
 			} else {
-				return "602, failedToDownload";
+				return iProtocolResponse.failedDownload;
 			}
-		case "101":
-		    userName = receivedMessageSplit.get(2);
-		    password= receivedMessageSplit.get(3);
-		    if(createUser(userName, password)) {
-		    	return "302 SUCCESS";
-		    } else {
-		    	return "301 FAILED";
-		    }
-//			break;
-//		default:
-//			System.out.print("Error");
+		case "400":
+			userName = receivedMessageSplit.get(2);
+			if (isloggedOff(userName)) {
+				return iProtocolResponse.successFulLogOut + " Goodbye " + userName;
+			} else {
+				return iProtocolResponse.failedLogOut;
+			}
 		}
 		
-		return requestt;
+		return clientRequest;
 
 	}
 	
@@ -149,13 +145,11 @@ public class ServerStreamSocket extends Socket {
 			}
 			
 			if (user.isLoggedIn()) {
-				logInResponse = "202";
+				logInResponse = iProtocolResponse.loginRequestUserAlreadyLoggedIn;
 			} else {
 				while ((userNameInFile = br.readLine()) != null) {
 	                if (userName.equals(userNameInFile.substring(0, userNameInFile.indexOf(':'))) && password.equals(userNameInFile.substring(userNameInFile.indexOf(':') + 2))) {
-	                	System.out.println("Credentials are valid");
-	                	logInResponse = "200";
-	                	//break;
+	                	logInResponse = iProtocolResponse.successfulLoginRequest;
 
 	                } 
 			}
@@ -163,7 +157,6 @@ public class ServerStreamSocket extends Socket {
 			
 			br.close();
 	} catch (IOException e) {
-		System.out.println("Error in validating user log in details");
 		e.printStackTrace();
 	}
 		
@@ -175,7 +168,7 @@ public class ServerStreamSocket extends Socket {
 		List<String> receivedMessageSplit = Arrays.asList(request.split(","));
 	    String requestCode = receivedMessageSplit.get(0);
 	    User user = new User();
-	    if (requestCode.trim().equals("100")) {
+	    if (requestCode.trim().equals("800")) {
 		    String userName = receivedMessageSplit.get(2);
 		    String password= receivedMessageSplit.get(3);
 	    	user.setUserName(userName);
@@ -195,12 +188,9 @@ public class ServerStreamSocket extends Socket {
 		try {
 		if (!isValidUserName(userName)) {
 			isUserCreated = false;
-			//serverResponse = "301 " + Response.FAILED;
 		} else {
 	        saveUserInfo(userName, password);
-			System.out.println("Successfully registered user " + userName);
 			isUserCreated = true;
-			//serverResponse = "302 " + Response.SUCCESS;
 		}
 		} catch (IOException ex) {
 			System.out.println("Error in creating user");
@@ -221,14 +211,12 @@ public class ServerStreamSocket extends Socket {
 		String existingUserName;
 		while ((existingUserName = br.readLine()) != null) {
 			if (userName.equalsIgnoreCase(existingUserName.substring(0, existingUserName.indexOf(":")))) {
-				System.out.println("Username already exists... \nPlease enter another username");
 				isValidName = false;
 			}
 
 		}
 		br.close();
 		} catch (IOException e) {
-			System.out.println("Error in validating user");
 			e.printStackTrace();
 		}
 		
@@ -245,11 +233,8 @@ public class ServerStreamSocket extends Socket {
 			
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Users.txt", true), StandardCharsets.UTF_8));
 			 writer.append("\n" + userName + ": ").append(password);
-			 //writer.append(encryptPassword(password, 2));
 			 writer.close();
-			 System.out.println("Successfully saved to file");
 		}  catch (FileNotFoundException e) {
-			System.out.println("Error writing to file ");
 			e.printStackTrace();
 	      }
 		
@@ -260,13 +245,14 @@ public class ServerStreamSocket extends Socket {
 	   boolean isMessageUploaded = false;
 		   userName = receivedMessageSplit.get(2);
 		   message= receivedMessageSplit.get(3);
+		   limitedMessage = message;
 		  if (message.length() > MESSAGE_LIMIT) {
 			 message = message.substring(0, MESSAGE_LIMIT);
+			 limitedMessage = message;
 			}
 		   for (User loggedInUser: ServerThread.loggedInUsers) {
 			   if (loggedInUser.getUserName().trim().equals(userName)) {
 				   loggedInUser.getMessages().add(message);
-				   System.out.print("\n\n " + loggedInUser.getMessages());
 				   isMessageUploaded  = true;
 				   break;
 			   } 
@@ -311,15 +297,24 @@ public class ServerStreamSocket extends Socket {
 		return isDownloaded;
 	}
 	
-	public void logOff() {
-		
+	public boolean isloggedOff(String userName) {
+	    boolean isUserLoggedOff = false;	
 		try {
+			for (User loggedInUser: ServerThread.loggedInUsers) {
+				if (loggedInUser.getUserName().trim().equals(userName)) {
+					ServerThread.loggedInUsers.remove(loggedInUser);
+					isUserLoggedOff = true;
+					break;
+				}
+			}
 			close();
 			ServerThread.sessionStarted = false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
+		
+		return isUserLoggedOff;
 		
 	}
 	

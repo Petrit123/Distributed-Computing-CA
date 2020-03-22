@@ -24,6 +24,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
 import com.Client.Client;
+import com.Protocol.iProtocolResponse;
+import com.Protocol.iRequest;
 
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
@@ -94,11 +96,11 @@ public class Twitter extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String serverResponse = Client.sendUserTMPMessage("700", "UPLOAD", userName, textField.getText());
+				String serverResponse = Client.sendUserTMPMessage(iRequest.UPLOAD, userName, textField.getText());
 				List<String> receivedMessageSplit = Arrays.asList(serverResponse.split(","));
-				String message = receivedMessageSplit.get(0);
-				String response = receivedMessageSplit.get(1);
-				String timeStamp = receivedMessageSplit.get(2);
+				String message = receivedMessageSplit.get(1);
+				String response = receivedMessageSplit.get(2);
+				String timeStamp = receivedMessageSplit.get(3);
 				appendToPane(textPane, "\n\n############################################################################################### \n", Color.GRAY);
 				appendToPane(textPane, message, Color.BLACK);
 				if (response.trim().equals("Sent")) {
@@ -114,8 +116,14 @@ public class Twitter extends JFrame {
 		JButton button_1 = new JButton("Log Off");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				Client.sendLogOffRequest("900", Client.MESSAGE_TO_END_CONNECTION);
+					JOptionPane.showMessageDialog(null, "Goodbye " + userName, "SUCCESS", JOptionPane.INFORMATION_MESSAGE);
+					
+					setVisible(false);
+					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					dispose();
+
+				//	JOptionPane.showMessageDialog(null, "Sorry " + userName + " there was an error is logging you out", "ERROR", JOptionPane.ERROR_MESSAGE);
+
 			}
 		});
 		button_1.setBounds(20, 402, 173, 30);
@@ -136,10 +144,10 @@ public class Twitter extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				String serverResponse = Client.sendDownloadRequest("600", "DOWNLOAD", userName);
+				String serverResponse = Client.sendDownloadRequest(iRequest.DOWNLOAD, userName);
 				
 				if(Client.isTMPMessageDownloaded(serverResponse)) {
-					JOptionPane.showMessageDialog(null,"Downloaded", "Success", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Successfully downloaded messages in the following location: " + userName + "/" + userName + "Messages.html", "Success", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});

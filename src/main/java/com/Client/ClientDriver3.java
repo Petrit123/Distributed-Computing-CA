@@ -1,6 +1,6 @@
 package com.Client;
 
-public class Client3 {
+public class ClientDriver3 {
 	public static void main(String [] args) {
 		
 		Client client = new Client();
