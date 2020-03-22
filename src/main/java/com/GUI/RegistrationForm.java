@@ -2,20 +2,14 @@ package com.GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import com.Client.Client;
-import com.Protocol.Request;
 import com.Protocol.iRequest;
-import com.Users.UserService;
-
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;

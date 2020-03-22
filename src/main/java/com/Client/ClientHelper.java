@@ -1,11 +1,7 @@
 package com.Client;
 
 import java.net.*;
-
 import javax.swing.JOptionPane;
-
-import com.Protocol.Request;
-
 import java.io.*;;
 
 public class ClientHelper {

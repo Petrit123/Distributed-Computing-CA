@@ -5,11 +5,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
-
 import com.Users.User;
-import com.Users.UserService;
 import com.GUI.*;
-import com.Protocol.Request;
 import com.Protocol.iProtocolResponse;
 import com.Protocol.iRequest;
 
@@ -17,7 +14,6 @@ public class Client {
       public static final String MESSAGE_TO_END_CONNECTION = "Exit";
       public InputStreamReader is = new InputStreamReader(System.in);
       public BufferedReader br = new BufferedReader(is);
-      public UserService s = new UserService();
       public static String sessionId = "";
       public User user;
       public static ClientHelper helper;

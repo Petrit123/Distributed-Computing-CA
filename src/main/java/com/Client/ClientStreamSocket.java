@@ -1,9 +1,6 @@
 package com.Client;
 
 import java.net.*;
-
-import com.Protocol.Request;
-
 import java.io.*;
 
 public class ClientStreamSocket {
