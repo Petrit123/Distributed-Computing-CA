@@ -3,6 +3,8 @@ package com.Users;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 		
@@ -10,12 +12,14 @@ public class User {
 	private String passWord;
 	private boolean isLoggedIn;
 	private int sessionId;
+	private List<String> messages = new ArrayList<String>();
 	
-	public User(String userName, String passWord, boolean isLoggedIn, int sessionId) {
+	public User(String userName, String passWord, boolean isLoggedIn, int sessionId, List<String> messages) {
 		this.userName = userName;
 		this.passWord = passWord;
 		this.isLoggedIn = isLoggedIn;
 		this.sessionId = sessionId;
+		this.messages = messages;
 	}
 	
 	public User() {
@@ -46,5 +50,15 @@ public class User {
 	public void setSessionId(int sessionId) {
 		this.sessionId = sessionId;
 	}
+
+	public List<String> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<String> messages) {
+		this.messages = messages;
+	}
+	
+
 
 }

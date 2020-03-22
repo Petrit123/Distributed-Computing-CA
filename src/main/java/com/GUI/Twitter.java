@@ -5,6 +5,13 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +29,8 @@ import javax.swing.JTextPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -33,6 +42,7 @@ public class Twitter extends JFrame {
 	private JLabel lblUser;
 	private JLabel lblSessionId;
 	public String userName = "";
+	private JButton downloadBtn;
 
 	/**
 	 * Launch the application.
@@ -91,13 +101,23 @@ public class Twitter extends JFrame {
 				String timeStamp = receivedMessageSplit.get(2);
 				appendToPane(textPane, "\n\n############################################################################################### \n", Color.GRAY);
 				appendToPane(textPane, message, Color.BLACK);
-				appendToPane(textPane,"\t\t\t\t\t\t " + response, Color.GREEN);
+				if (response.trim().equals("Sent")) {
+					appendToPane(textPane,"\t\t\t\t\t\t " + response, Color.GREEN);
+				} else if (response.trim().equals("Failed")) {
+					appendToPane(textPane,"\t\t\t\t\t\t " + response, Color.RED);
+				}
 				appendToPane(textPane, "\n\t\t\t\t\t\t " + timeStamp, Color.BLUE);
 				appendToPane(textPane, "\n###############################################################################################", Color.GRAY);
 			}
 		});
 		
 		JButton button_1 = new JButton("Log Off");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Client.sendLogOffRequest("900", Client.MESSAGE_TO_END_CONNECTION);
+			}
+		});
 		button_1.setBounds(20, 402, 173, 30);
 		contentPane.add(button_1);
 		
@@ -110,6 +130,21 @@ public class Twitter extends JFrame {
 		lblUser.setForeground(new Color(255, 255, 255));
 		lblUser.setBounds(20, 21, 134, 21);
 		contentPane.add(lblUser);
+		
+		downloadBtn = new JButton("Download");
+		downloadBtn.addMouseListener(new MouseAdapter()  {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				String serverResponse = Client.sendDownloadRequest("600", "DOWNLOAD", userName);
+				
+				if(Client.isTMPMessageDownloaded(serverResponse)) {
+					JOptionPane.showMessageDialog(null,"Downloaded", "Success", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+		downloadBtn.setBounds(20, 349, 173, 30);
+		contentPane.add(downloadBtn);
 		
 	}
 	

@@ -7,11 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import com.Client.Client;
 import com.Requests.Request;
 import com.Responses.Response;
 import com.Users.User;
 import com.Users.UserService;
 
+import java.awt.Desktop;
 import java.io.*;
 
 public class ServerStreamSocket extends Socket {
@@ -25,6 +30,8 @@ public class ServerStreamSocket extends Socket {
 	private File file = new File("Users.txt");
 	private static final int MESSAGE_LIMIT = 6;
 	public static List<User> loggedInUsers = new ArrayList<User>();
+	private String downloadedMessages = "";
+	public static List<String> userMessages;
 	
 		
 	ServerStreamSocket(Socket socket) throws IOException {
@@ -86,20 +93,29 @@ public class ServerStreamSocket extends Socket {
 		    } else if (log == "202") {
 		    	return "202 ERROR , " + sessionId;
 		    } else {
-		    	return "404 DENIED , " + + sessionId;
+		    	return "404 DENIED , " + sessionId;
 		    }
 		    //sendRequest(response);
 			//user.addUserToListOfUsers(userName, password);
-//		case "LOGOFF":
-//			System.out.print("Log off");
-//			break;
+		case "900":
+			logOff();
+			return "GoodBye";
 		case "700":
 		    userName = receivedMessageSplit.get(2);
 		    String message= receivedMessageSplit.get(3);
-		    return uploadMessage(userName, message);
-//		case "DOWNLOAD":
-//			System.out.println("Download");
-//			break;
+		    String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH.mm").format(new Date());
+		    if (uploadMessageToArrayList(userName, message)) {
+		    	return message += ", Sent ," + timeStamp;
+		    } else {
+		    	return message += ", Failed ," + timeStamp;
+		    }
+		case "600":
+			userName = receivedMessageSplit.get(2);
+			if (downloadMessage(userName)) {
+				return "601, " + downloadedMessages;
+			} else {
+				return "602, failedToDownload";
+			}
 		case "101":
 		    userName = receivedMessageSplit.get(2);
 		    password= receivedMessageSplit.get(3);
@@ -159,7 +175,6 @@ public class ServerStreamSocket extends Socket {
 		List<String> receivedMessageSplit = Arrays.asList(request.split(","));
 	    String requestCode = receivedMessageSplit.get(0);
 	    User user = new User();
-	    System.out.print("\n\n Received " + requestCode + "\n\n");
 	    if (requestCode.trim().equals("100")) {
 		    String userName = receivedMessageSplit.get(2);
 		    String password= receivedMessageSplit.get(3);
@@ -240,32 +255,72 @@ public class ServerStreamSocket extends Socket {
 		
  }
 	
-	public String uploadMessage(String userName, String message) {
-		
-		   String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH.mm").format(new Date());		
-		try {
-			
-			File userNameFile = new File(userName);
-			
-			if (!userNameFile.exists()) {
-				userNameFile.mkdir();
+	
+	public boolean uploadMessageToArrayList(String userName, String message) {
+	   boolean isMessageUploaded = false;
+		   userName = receivedMessageSplit.get(2);
+		   message= receivedMessageSplit.get(3);
+		  if (message.length() > MESSAGE_LIMIT) {
+			 message = message.substring(0, MESSAGE_LIMIT);
 			}
-			
-			if (message.length() > MESSAGE_LIMIT) {
-				message = message.substring(0, MESSAGE_LIMIT);
-			}			
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userName + "/" + userName + "Messages.txt", true), StandardCharsets.UTF_8));
-			bw.append(message);
-			bw.newLine();
+		   for (User loggedInUser: ServerThread.loggedInUsers) {
+			   if (loggedInUser.getUserName().trim().equals(userName)) {
+				   loggedInUser.getMessages().add(message);
+				   System.out.print("\n\n " + loggedInUser.getMessages());
+				   isMessageUploaded  = true;
+				   break;
+			   } 
+		   }
+		   
+		   return isMessageUploaded;
+		   	   
+	}
+	
+	public boolean downloadMessage(String userName) {
+		boolean isDownloaded = false;
+		File userNameFile = new File(userName);
+		
+		if (!userNameFile.exists()) {
+			userNameFile.mkdir();
+		}
+		
+		String downloadedDetails = "<html><head></head><body><div><h1> Messages uploaded by " + userName + " to the TMP application</h1>";
+		
+		   for (User loggedInUser: ServerThread.loggedInUsers) {
+			   if (loggedInUser.getUserName().trim().equals(userName)) {
+				   for (int i = 0; i < loggedInUser.getMessages().size(); i ++) {
+	      			   downloadedDetails +=  "<p> " + loggedInUser.getMessages().get(i)+ "<br> </p></div></body></html>";   
+				   }
+				   break;
+			   } 
+		   }
+		
+		File downloadedMessagesLocation = new File(userName + "/" + userName + "Messages.html");
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(downloadedMessagesLocation));
+			bw.write(downloadedDetails);
 			bw.close();
-			message += ", Sent ," + timeStamp;
+			Desktop.getDesktop().open(downloadedMessagesLocation);
+		   isDownloaded = true;
+		} catch (IOException e1) {
+			   isDownloaded = true;
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		return isDownloaded;
+	}
+	
+	public void logOff() {
+		
+		try {
+			close();
+			ServerThread.sessionStarted = false;
 		} catch (IOException e) {
-			message += ", Failed ," + timeStamp;
-			System.out.print("Error in uploading message");
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return message;
 	}
 	
 	

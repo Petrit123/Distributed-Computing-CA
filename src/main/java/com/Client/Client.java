@@ -12,7 +12,7 @@ import com.GUI.*;
 import com.Requests.Request;
 
 public class Client {
-      private static final String MESSAGE_TO_END_CONNECTION = "Exit";
+      public static final String MESSAGE_TO_END_CONNECTION = "Exit";
       public InputStreamReader is = new InputStreamReader(System.in);
       public BufferedReader br = new BufferedReader(is);
       public UserService s = new UserService();
@@ -204,6 +204,22 @@ public static String sendUserTMPMessage(String responseCode, String request, Str
 	
 }
 
+public static String sendDownloadRequest(String responseCode, String request, String userName) {
+	
+	String sendUserDownloadRequest = responseCode + "," + request + "," + userName;
+	
+	String serverResponse = "";
+	
+	try {
+		serverResponse = helper.getEcho(sendUserDownloadRequest);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return serverResponse;
+}
+
 public static boolean isTMPMessageSuccessfulySent(String serverResponse) {
 	boolean isTMPMessageSuccessfulySent = false;
 	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("702")) {
@@ -215,5 +231,32 @@ public static boolean isTMPMessageSuccessfulySent(String serverResponse) {
 	return isTMPMessageSuccessfulySent;
 }
 
+public static boolean isTMPMessageDownloaded(String serverResponse) {
+	boolean isMessageDownloaded = false;
+	
+	if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("601")) {
+		isMessageDownloaded = true;
+	} else if (serverResponse.substring(0,serverResponse.indexOf(' ')).trim().equals("602")) {
+		isMessageDownloaded = false;
+	}
+	
+	return isMessageDownloaded;
+}
+
+public static void sendLogOffRequest(String responseCode, String request) {
+	String loggOfRequest = responseCode + "," + request;
+	
+	String serverResponse = "";
+	
+	try {
+		serverResponse = helper.getEcho(loggOfRequest);
+	} catch (SocketException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
       
 } 
